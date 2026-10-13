@@ -1,0 +1,136 @@
+.inv-summary {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  gap: 0;
+}
+.inv-summary-kicker {
+  color: var(--color-accent-700) !important;
+}
+.inv-summary-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 2px 0 8px;
+}
+.inv-summary-value {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 1;
+}
+.inv-summary-gainpct {
+  font-size: 14px;
+  font-weight: 500;
+}
+.inv-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 13px;
+  border-top: 1px solid var(--color-divider);
+}
+.inv-summary-net {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0 0;
+  margin-top: 4px;
+  border-top: 1px dashed var(--color-neutral-500);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.inv-section {
+  display: flex;
+  flex-direction: column;
+}
+.inv-section h5 {
+  margin: 0 0 2px;
+}
+
+.inv-hold-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+.inv-hold-ticker {
+  width: 52px;
+  flex: none;
+  border: 1px solid var(--color-divider);
+  padding: 4px 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.inv-hold-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.inv-hold-name {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.inv-hold-sub {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}
+.inv-hold-amounts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.inv-hold-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+.inv-hold-gain {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.inv-pac-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+.inv-pac-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.inv-pac-label {
+  font-size: 14px;
+}
+.inv-pac-sub {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}
+.inv-pac-amt {
+  font-size: 14px;
+  font-weight: 500;
+}
+.inv-pac-stop {
+  font-size: 12px;
+}
+
+.inv-footer {
+  flex: none;
+  padding: 12px 20px;
+  border-top: 1px solid var(--color-divider);
+}
+.inv-search-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 17px;
+}
