@@ -1,0 +1,193 @@
+.home-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 0;
+  flex: none;
+}
+
+.home-period {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-body {
+  flex: 1;
+  overflow: auto;
+  padding: 16px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* — hero — */
+.home-hero {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.home-hero-label {
+  font-size: 14px;
+  color: var(--color-neutral-800);
+}
+.home-amount {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.home-perday {
+  font-size: 13px;
+  color: var(--color-neutral-800);
+}
+.home-networth {
+  all: unset;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}
+.home-networth:hover {
+  color: var(--color-accent-700);
+}
+
+/* — alert banner — */
+.home-alert {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--color-accent-900);
+  border-color: var(--color-accent) !important;
+}
+
+/* — barra del mese — */
+.home-monthbar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.home-monthbar {
+  display: flex;
+  height: 34px;
+  padding: 3px;
+  gap: 3px;
+}
+.home-monthbar > div {
+  transition: width 0.4s;
+}
+.home-monthbar-avail {
+  flex: 1;
+  background: repeating-linear-gradient(135deg, var(--color-accent-200) 0 4px, transparent 4px 8px);
+  border: 1px solid var(--color-accent-400);
+}
+.home-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 11px;
+  color: var(--color-neutral-800);
+}
+.home-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.home-legend-item i {
+  width: 9px;
+  height: 9px;
+  flex: none;
+}
+.home-legend-avail-dot {
+  border: 1px solid var(--color-accent-400);
+  background: var(--color-accent-200);
+}
+
+/* — griglia 2x2 — */
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--color-divider);
+  border-left: 1px solid var(--color-divider);
+}
+.home-grid-cell {
+  all: unset;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+.home-grid-cell:hover {
+  background: var(--color-accent-100);
+}
+.home-grid-kicker {
+  color: var(--color-accent-700) !important;
+}
+.home-grid-value {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 22px;
+}
+
+/* — ultimi movimenti — */
+.home-recent {
+  display: flex;
+  flex-direction: column;
+}
+.home-recent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.home-recent-header h5 {
+  margin: 0 0 2px;
+}
+.home-recent-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+.home-recent-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.home-recent-name {
+  font-size: 14px;
+}
+.home-recent-sub {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}
+.home-recent-amt {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* — footer — */
+.home-footer {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--color-divider);
+}
+.home-footer-btn {
+  height: 48px;
+  font-size: 17px;
+  width: 100%;
+}

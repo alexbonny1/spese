@@ -1,10 +1,39 @@
-function App() {
+import { useState } from 'react';
+import { TabBar } from './components/TabBar';
+import type { FixTabId, TabId } from './lib/nav';
+import { HomeScreen } from './screens/HomeScreen';
+import { PlaceholderScreen } from './screens/PlaceholderScreen';
+import { AppStateProvider } from './state/AppStateContext';
+import './App.css';
+
+function Shell() {
+  const [tab, setTab] = useState<TabId>('home');
+  const [, setFsTab] = useState<FixTabId>('spese');
+
+  const goTab = (t: TabId, fs?: FixTabId) => {
+    setTab(t);
+    if (fs) setFsTab(fs);
+  };
+
   return (
-    <main className="placeholder">
-      <h1>Saldo</h1>
-      <p>App in costruzione. Vedi <code>design_handoff_saldo_app/</code> per il prototipo e le specifiche.</p>
-    </main>
-  )
+    <div className="app-shell">
+      <div className="app-content">
+        {tab === 'home' && <HomeScreen onNavigate={goTab} />}
+        {tab === 'mov' && <PlaceholderScreen title="Movimenti" />}
+        {tab === 'fix' && <PlaceholderScreen title="Fisse" />}
+        {tab === 'set' && <PlaceholderScreen title="Impostazioni" />}
+      </div>
+      <TabBar active={tab} onChange={(t) => goTab(t)} />
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <AppStateProvider>
+      <Shell />
+    </AppStateProvider>
+  );
+}
+
+export default App;
