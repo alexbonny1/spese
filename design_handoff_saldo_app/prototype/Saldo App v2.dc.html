@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-8584ad11-aee2-400e-bd6e-b4bfcbaf6438/styles.css">
+<script src="_ds/industry-8584ad11-aee2-400e-bd6e-b4bfcbaf6438/_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-surface)}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}.phone *{scrollbar-width:none}.phone *::-webkit-scrollbar{display:none}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;font-family:var(--font-body);color:var(--color-text)">
+<div class="phone blueprint" style="width:362px;height:762px;flex:none;position:relative;overflow:hidden;background:var(--color-bg)">
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;padding:12px 20px 0;font-size:12px;font-weight:500"><span>9:41</span><span>●●● ▮</span></div>
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0">
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:16px;letter-spacing:.12em;text-transform:uppercase">{{ periodLabel }}</span>
+        <span class="tag tag-outline">{{ daysLeftLabel }}</span>
+      </div>
+      <div style="flex:1;overflow:auto;padding:16px 20px 16px;display:flex;flex-direction:column;gap:18px">
+        <div style="text-align:center;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:14px;color:var(--color-neutral-800)">Puoi ancora spendere</span>
+          <span style="font-family:var(--font-heading);font-weight:600;font-size:64px;line-height:1;letter-spacing:-0.03em">€ {{ spendable }}</span>
+          <sc-if value="{{ showPerDay }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:var(--color-neutral-800)">circa € {{ perDay }} al giorno</span></sc-if>
+          <button onClick="{{ goInv }}" style="all:unset;cursor:pointer;align-self:center;margin-top:4px;font-size:11px;color:var(--color-neutral-700)" style-hover="color:var(--color-accent-700)">Patrimonio totale € {{ netWorth }} ›</button>
+        </div>
+        <sc-if value="{{ alertOn }}" hint-placeholder-val="{{ false }}">
+          <div class="blueprint" style="padding:10px 12px;font-size:13px;color:var(--color-accent-900);border-color:var(--color-accent)">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            {{ alertText }}
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="blueprint" style="display:flex;height:34px;padding:3px;gap:3px">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <div style="width:{{ wFixed }};background:var(--color-accent-800);transition:width .4s"></div>
+            <div style="width:{{ wSpent }};background:var(--color-accent-500);transition:width .4s"></div>
+            <div style="width:{{ wSave }};background:var(--color-neutral-500);transition:width .4s"></div>
+            <div style="width:{{ wInv }};background:var(--color-neutral-300);transition:width .4s"></div>
+            <div style="flex:1;background:repeating-linear-gradient(135deg,var(--color-accent-200) 0 4px,transparent 4px 8px);border:1px solid var(--color-accent-400)"></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--color-neutral-800)">
+            <span style="display:flex;align-items:center;gap:5px"><i style="width:9px;height:9px;background:var(--color-accent-800)"></i>Fisse</span>
+            <span style="display:flex;align-items:center;gap:5px"><i style="width:9px;height:9px;background:var(--color-accent-500)"></i>Speso</span>
+            <span style="display:flex;align-items:center;gap:5px"><i style="width:9px;height:9px;background:var(--color-neutral-500)"></i>Risparmi</span>
+            <span style="display:flex;align-items:center;gap:5px"><i style="width:9px;height:9px;background:var(--color-neutral-300)"></i>Investito</span>
+            <span style="display:flex;align-items:center;gap:5px"><i style="width:9px;height:9px;border:1px solid var(--color-accent-400);background:var(--color-accent-200)"></i>Disponibile {{ pAvail }}</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--color-divider);border-left:1px solid var(--color-divider)">
+          <button onClick="{{ goMov }}" style="all:unset;cursor:pointer;padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)"><div class="card-kicker" style="color:var(--color-accent-700)">Entrate</div><div style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ income }}</div></button>
+          <button onClick="{{ goFixSp }}" style="all:unset;cursor:pointer;padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)"><div class="card-kicker" style="color:var(--color-accent-700)">Fisse</div><div style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ fixed }}</div></button>
+          <button onClick="{{ goMov }}" style="all:unset;cursor:pointer;padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)"><div class="card-kicker" style="color:var(--color-accent-700)">Speso</div><div style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ spent }}</div></button>
+          <button onClick="{{ goRisp }}" style="all:unset;cursor:pointer;padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)"><div class="card-kicker" style="color:var(--color-accent-700)">Risparmi + investiti</div><div style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ setAside }}</div></button>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><h5 style="margin:0 0 2px">Ultimi movimenti</h5><button onClick="{{ goMov }}" class="btn btn-ghost" style="font-size:13px">Tutti</button></div>
+          <sc-for list="{{ recent }}" as="t" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--color-divider)">
+              <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">{{ t.name }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ t.sub }}</span></div>
+              <span style="font-size:14px;font-weight:500;color:{{ t.color }}">{{ t.amtF }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 20px;border-top:1px solid var(--color-divider)">
+        <button onClick="{{ openIn }}" class="btn btn-secondary blueprint" style="height:48px;font-size:17px">+ Entrata<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+        <button onClick="{{ openOut }}" class="btn btn-primary blueprint" style="height:48px;font-size:17px">− Uscita<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMov }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:12px">
+        <h3 style="margin:0">Movimenti</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--color-divider)">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+            <button onClick="{{ f.pick }}" style="cursor:pointer;border:0;border-left:{{ f.sep }};padding:8px 0;font-size:13px;font-family:var(--font-body);background:{{ f.bg }};color:{{ f.color }}">{{ f.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-neutral-800)"><span>Entrate <b style="color:var(--color-accent-700)">+ {{ movIn }}</b></span><span>Uscite <b style="color:var(--color-text)">− {{ movOut }}</b></span></div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:4px 20px 20px">
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;padding-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-bottom:4px;border-bottom:1px solid var(--color-divider)"><span>{{ g.label }}</span><span>{{ g.totF }}</span></div>
+            <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;border-bottom:1px solid var(--color-divider)">
+                <button onClick="{{ t.toggle }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:9px 0">
+                  <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">{{ t.name }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ t.cat }}</span></div>
+                  <span style="font-size:14px;font-weight:500;color:{{ t.color }}">{{ t.amtF }}</span>
+                </button>
+                <sc-if value="{{ t.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:0 0 10px">
+                    <sc-if value="{{ t.isInv }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:var(--color-neutral-700)">Eliminandolo togli anche l'acquisto dal portafoglio.</span></sc-if>
+                    <div style="display:flex;justify-content:flex-end;gap:8px">
+                      <button onClick="{{ t.toggle }}" class="btn btn-secondary" style="font-size:13px">Chiudi</button>
+                      <button onClick="{{ t.remove }}" class="btn btn-secondary" style="font-size:13px;color:var(--color-accent-800);border-color:var(--color-accent)">Elimina</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <sc-if value="{{ movEmpty }}" hint-placeholder-val="{{ false }}"><p style="font-size:13px;color:var(--color-neutral-700);padding-top:16px">Nessun movimento.</p></sc-if>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid var(--color-divider)">
+        <button onClick="{{ openOut }}" class="btn btn-primary blueprint" style="width:100%;height:48px;font-size:17px">+ Aggiungi movimento<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFix }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:12px">
+        <h3 style="margin:0">Fisse</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--color-divider)">
+          <sc-for list="{{ fsTabs }}" as="f" hint-placeholder-count="3">
+            <button onClick="{{ f.pick }}" style="cursor:pointer;border:0;border-left:{{ f.sep }};padding:8px 0;font-size:13px;font-family:var(--font-body);background:{{ f.bg }};color:{{ f.color }}">{{ f.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ fsSpese }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;overflow:auto;padding:8px 20px 20px;display:flex;flex-direction:column;gap:20px">
+          <p style="font-size:12px;color:var(--color-neutral-800);margin:0">Si ripetono ogni mese. Le spese fisse vengono tolte subito dallo spendibile, anche se non sono ancora state pagate.</p>
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding:6px 0 4px;border-bottom:1px solid var(--color-divider)"><h5 style="margin:0">Entrate fisse</h5><span style="font-family:var(--font-heading);font-weight:600;font-size:17px;color:var(--color-accent-700)">+ {{ incFixedTot }}</span></div>
+            <sc-for list="{{ incRows }}" as="r" hint-placeholder-count="2">
+              <button onClick="{{ r.edit }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)">
+                <div style="width:38px;flex:none;text-align:center;border:1px solid var(--color-divider);padding:2px 0;line-height:1.1"><div style="font-family:var(--font-heading);font-weight:600;font-size:17px">{{ r.day }}</div><div style="font-size:9px;letter-spacing:.08em;color:var(--color-neutral-700)">GIORNO</div></div>
+                <span style="flex:1;font-size:14px">{{ r.name }}</span>
+                <span style="font-size:14px;font-weight:500">+ {{ r.amtF }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--color-neutral-500)"><path d="m9 18 6-6-6-6"></path></svg>
+              </button>
+            </sc-for>
+            <button onClick="{{ newInc }}" class="btn btn-ghost" style="align-self:flex-start;margin-top:6px;font-size:14px">+ Aggiungi entrata fissa</button>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding:6px 0 4px;border-bottom:1px solid var(--color-divider)"><h5 style="margin:0">Spese fisse</h5><span style="font-family:var(--font-heading);font-weight:600;font-size:17px">− {{ fixed }}</span></div>
+            <sc-for list="{{ fixRows }}" as="r" hint-placeholder-count="5">
+              <button onClick="{{ r.edit }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)">
+                <div style="width:38px;flex:none;text-align:center;border:1px solid var(--color-divider);padding:2px 0;line-height:1.1"><div style="font-family:var(--font-heading);font-weight:600;font-size:17px">{{ r.day }}</div><div style="font-size:9px;letter-spacing:.08em;color:var(--color-neutral-700)">GIORNO</div></div>
+                <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">{{ r.name }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ r.status }}</span></div>
+                <span style="font-size:14px;font-weight:500">− {{ r.amtF }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--color-neutral-500)"><path d="m9 18 6-6-6-6"></path></svg>
+              </button>
+            </sc-for>
+            <button onClick="{{ newFix }}" class="btn btn-ghost" style="align-self:flex-start;margin-top:6px;font-size:14px">+ Aggiungi spesa fissa</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ fsRisp }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;overflow:auto;padding:12px 20px 20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--color-divider);border-left:1px solid var(--color-divider)">
+            <div style="padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Nei salvadanai</div><div style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ pgTotal }}</div></div>
+            <div style="padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Tolti questo mese</div><div style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ saveMonth }}</div></div>
+          </div>
+          <p style="font-size:12px;color:var(--color-neutral-800);margin:0">Non sono spendibili. La quota mensile di ogni salvadanaio viene tolta in automatico dallo spendibile; versamenti e prelievi lo modificano subito.</p>
+          <sc-for list="{{ pgRows }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.open }}" class="card blueprint" style="all:unset;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:8px;padding:14px 16px;border:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)">
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:var(--font-heading);font-weight:600;font-size:18px">{{ p.name }}</span><span style="font-size:12px;color:var(--color-neutral-700)">{{ p.pctF }}</span></div>
+              <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-heading);font-weight:600;font-size:26px;line-height:1">€ {{ p.savedF }}</span><span style="font-size:13px;color:var(--color-neutral-700)">di € {{ p.goalF }}</span></div>
+              <div style="height:6px;background:var(--color-accent-200)"><div style="height:100%;width:{{ p.w }};background:var(--color-accent-700)"></div></div>
+              <span style="font-size:12px;color:var(--color-neutral-800)">€ {{ p.quotaF }}/mese · entro {{ p.dateF }}</span>
+              <span style="font-size:11px;color:{{ p.hintColor }}">{{ p.hint }}</span>
+            </button>
+          </sc-for>
+          <button onClick="{{ newPg }}" class="btn btn-secondary blueprint" style="height:44px;font-size:15px">+ Nuovo salvadanaio<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ fsInv }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;overflow:auto;padding:12px 20px 20px;display:flex;flex-direction:column;gap:16px">
+          <div class="card blueprint" style="padding:14px 16px;gap:0">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <span class="card-kicker" style="color:var(--color-accent-700)">Valore attuale</span>
+            <div style="display:flex;align-items:baseline;gap:8px;margin:2px 0 8px"><span style="font-family:var(--font-heading);font-weight:600;font-size:36px;line-height:1">€ {{ pfValue }}</span><span style="font-size:14px;font-weight:500;color:{{ pfGainColor }}">{{ pfGainPct }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-top:1px solid var(--color-divider)"><span>Investito (con commissioni)</span><span>€ {{ pfCost }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Guadagno/perdita</span><span style="font-weight:500;color:{{ pfGainColor }}">{{ pfGain }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Tasse se vendi oggi</span><span>− € {{ pfTax }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Dividendi annui stimati (netti)</span><span>€ {{ pfDiv }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0 0;margin-top:4px;border-top:1px dashed var(--color-neutral-500);font-family:var(--font-heading);font-weight:600;font-size:17px"><span>Netto se vendi oggi</span><span>€ {{ pfNet }}</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <h5 style="margin:0 0 2px">Titoli</h5>
+            <sc-for list="{{ holdRows }}" as="h" hint-placeholder-count="4">
+              <button onClick="{{ h.open }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-divider)" style-hover="background:var(--color-accent-100)">
+                <div style="width:52px;flex:none;border:1px solid var(--color-divider);padding:4px 0;text-align:center;font-family:var(--font-heading);font-weight:600;font-size:13px;letter-spacing:.04em">{{ h.sym }}</div>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ h.sub }}</span></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end"><span style="font-size:14px;font-weight:500">€ {{ h.valueF }}</span><span style="font-size:11px;font-weight:500;color:{{ h.color }}">{{ h.gainPctF }}</span></div>
+              </button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ hasPacs }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column">
+              <h5 style="margin:0 0 2px">Piani di accumulo (PAC)</h5>
+              <sc-for list="{{ pacRows }}" as="p" hint-placeholder-count="1">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-divider)">
+                  <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">{{ p.label }}</span><span style="font-size:11px;color:var(--color-neutral-700)">Ogni mese il giorno {{ p.day }} · conta nelle spese fisse</span></div>
+                  <span style="font-size:14px;font-weight:500">€ {{ p.amtF }}</span>
+                  <button onClick="{{ p.remove }}" class="btn btn-ghost" style="font-size:12px">Ferma</button>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <div style="padding:12px 20px;border-top:1px solid var(--color-divider)">
+          <button onClick="{{ openSearch }}" class="btn btn-primary blueprint" style="width:100%;height:48px;font-size:17px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>Cerca e compra<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isSet }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 0"><h3 style="margin:0">Impostazioni</h3></div>
+      <div style="flex:1;overflow:auto;padding:4px 20px 20px;display:flex;flex-direction:column">
+        <h6 style="margin:14px 0 0;color:var(--color-neutral-700)">Calcolo dello spendibile</h6>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Giorno dello stipendio</span><span style="font-size:11px;color:var(--color-neutral-700)">Il periodo va da qui al giorno prima del prossimo: {{ periodLabel }}</span></div>
+          <div style="display:flex;align-items:center;border:1px solid var(--color-divider)"><button onClick="{{ payDec }}" class="btn btn-icon" style="border:0;width:32px;height:32px">−</button><span style="width:34px;text-align:center;font-family:var(--font-heading);font-weight:600;font-size:17px">{{ payday }}</span><button onClick="{{ payInc }}" class="btn btn-icon" style="border:0;width:32px;height:32px">+</button></div>
+        </div>
+        <button onClick="{{ toggleExtra }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Conta le entrate extra</span><span style="font-size:11px;color:var(--color-neutral-700)">Le entrate una tantum aumentano lo spendibile</span></div>
+          <span style="width:38px;height:20px;flex:none;border:1px solid var(--color-divider);position:relative;background:{{ extraTrack }}"><span style="position:absolute;top:2px;left:{{ extraKnob }};width:14px;height:14px;background:{{ extraKnobBg }};transition:left .2s"></span></span>
+        </button>
+        <button onClick="{{ goRisp }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Quote di risparmio</span><span style="font-size:11px;color:var(--color-neutral-700)">Si impostano per ogni salvadanaio in Fisse › Risparmi</span></div>
+          <span style="font-size:14px;color:var(--color-neutral-800)">€ {{ quotaTot }}/mese ›</span>
+        </button>
+        <h6 style="margin:22px 0 0;color:var(--color-neutral-700)">Home</h6>
+        <button onClick="{{ togglePerDay }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Mostra quanto puoi spendere al giorno</span></div>
+          <span style="width:38px;height:20px;flex:none;border:1px solid var(--color-divider);position:relative;background:{{ pdTrack }}"><span style="position:absolute;top:2px;left:{{ pdKnob }};width:14px;height:14px;background:{{ pdKnobBg }};transition:left .2s"></span></span>
+        </button>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Avviso sotto i … al giorno</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ alertHint }}</span></div>
+          <div style="display:flex;align-items:center;border:1px solid var(--color-divider)"><button onClick="{{ alDec }}" class="btn btn-icon" style="border:0;width:32px;height:32px">−</button><span style="width:52px;text-align:center;font-family:var(--font-heading);font-weight:600;font-size:17px">{{ alertLabel }}</span><button onClick="{{ alInc }}" class="btn btn-icon" style="border:0;width:32px;height:32px">+</button></div>
+        </div>
+        <h6 style="margin:22px 0 0;color:var(--color-neutral-700)">Investimenti</h6>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)"><div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Tasse sul guadagno</span><span style="font-size:11px;color:var(--color-neutral-700)">12,5% su BTP e titoli di Stato, 26% sul resto</span></div></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)"><span style="flex:1;font-size:14px">Cambio USD/EUR</span><span style="font-size:14px;color:var(--color-neutral-800)">1,08 (esempio)</span></div>
+        <h6 style="margin:22px 0 0;color:var(--color-neutral-700)">Dati</h6>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--color-divider)"><span style="flex:1;font-size:14px">Valuta</span><span style="font-size:14px;color:var(--color-neutral-800)">Euro (€)</span></div>
+        <button onClick="{{ resetData }}" class="btn btn-secondary" style="align-self:flex-start;margin-top:16px;font-size:14px">Ripristina dati di esempio</button>
+      </div>
+    </sc-if>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px 18px;border-top:1px solid var(--color-divider)">
+      <button onClick="{{ goHome }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:{{ cHome }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10.5 12 3l9 7.5V21H3z"></path></svg>Home</button>
+      <button onClick="{{ goMov }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:{{ cMov }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path></svg>Movimenti</button>
+      <button onClick="{{ goFix }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:{{ cFix }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 2l4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg>Fisse</button>
+      <button onClick="{{ goSet }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:{{ cSet }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg>Impostazioni</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ pgOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:10;background:var(--color-bg);display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;padding:12px 20px 0;font-size:12px;font-weight:500"><span>9:41</span><span>●●● ▮</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0">
+        <button onClick="{{ pgClose }}" class="btn btn-ghost" style="font-size:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m15 18-6-6 6-6"></path></svg>Risparmi</button>
+        <button onClick="{{ pgEditOpen }}" class="btn btn-ghost" style="font-size:14px">Modifica</button>
+      </div>
+      <div style="flex:1;overflow:auto;padding:8px 20px 20px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <h3 style="margin:0">{{ pg.name }}</h3>
+          <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-heading);font-weight:600;font-size:48px;line-height:1;letter-spacing:-0.02em">€ {{ pg.savedF }}</span><span style="font-size:14px;color:var(--color-neutral-700)">di € {{ pg.goalF }}</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="blueprint" style="height:14px;padding:2px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div style="height:100%;width:{{ pg.w }};background:var(--color-accent-700);transition:width .4s"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-800)"><span>{{ pg.pctF }} raggiunto</span><span>mancano € {{ pg.leftF }}</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--color-divider);border-left:1px solid var(--color-divider)">
+          <div style="padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Quota attuale</div><div style="font-family:var(--font-heading);font-weight:600;font-size:20px">€ {{ pg.quotaF }}/mese</div></div>
+          <div style="padding:10px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Servono per {{ pg.dateF }}</div><div style="font-family:var(--font-heading);font-weight:600;font-size:20px">{{ pg.needF }}</div></div>
+        </div>
+        <span style="font-size:12px;color:{{ pg.hintColor }}">{{ pg.hint }}</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <button onClick="{{ pgModeIn }}" class="btn btn-secondary blueprint" style="height:44px;font-size:15px;background:{{ pgInBg }}">+ Versa<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+          <button onClick="{{ pgModeOut }}" class="btn btn-secondary blueprint" style="height:44px;font-size:15px;background:{{ pgOutBg }}">− Preleva<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+        </div>
+        <sc-if value="{{ pgModeOn }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:8px;align-items:flex-end">
+              <div class="field" style="flex:1"><label>{{ pgModeLabel }}</label><input class="input" inputMode="decimal" value="{{ pgAmt }}" onChange="{{ pgSetAmt }}" placeholder="0,00"></div>
+              <button onClick="{{ pgConfirm }}" disabled="{{ pgAmtInvalid }}" class="btn btn-primary blueprint" style="height:40px;font-size:15px">Conferma<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+            </div>
+            <span style="font-size:11px;color:var(--color-neutral-700)">{{ pgModeHint }}</span>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column">
+          <h5 style="margin:6px 0 2px">Storico</h5>
+          <sc-for list="{{ pg.hist }}" as="e" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--color-divider)">
+              <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">{{ e.label }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ e.date }}</span></div>
+              <span style="font-size:14px;font-weight:500;color:{{ e.color }}">{{ e.amtF }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ srchOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:10;background:var(--color-bg);display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;padding:12px 20px 0;font-size:12px;font-weight:500"><span>9:41</span><span>●●● ▮</span></div>
+      <div style="display:flex;align-items:center;gap:4px;padding:8px 12px 0">
+        <button onClick="{{ srchClose }}" class="btn btn-icon btn-ghost" style="color:var(--color-text)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m15 18-6-6 6-6"></path></svg></button>
+        <input class="input" value="{{ srchQ }}" onChange="{{ srchSetQ }}" placeholder="Cerca titolo, ticker o ISIN" style="flex:1">
+      </div>
+      <sc-if value="{{ hasPrefill }}" hint-placeholder-val="{{ false }}"><div style="margin:10px 20px 0;padding:8px 10px;font-size:12px;background:var(--color-accent-100);color:var(--color-accent-900)">Scegli dove investire € {{ prefillF }}</div></sc-if>
+      <div style="display:flex;gap:6px;overflow:auto;padding:12px 20px 4px">
+        <sc-for list="{{ typeChips }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.pick }}" style="flex:none;cursor:pointer;padding:5px 11px;font-size:12px;font-family:var(--font-body);border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</button>
+        </sc-for>
+      </div>
+      <div style="flex:1;overflow:auto;padding:4px 20px 12px">
+        <sc-for list="{{ results }}" as="r" hint-placeholder-count="8">
+          <button onClick="{{ r.open }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-divider);width:100%" style-hover="background:var(--color-accent-100)">
+            <div style="width:52px;flex:none;border:1px solid var(--color-divider);padding:4px 0;text-align:center;font-family:var(--font-heading);font-weight:600;font-size:13px;letter-spacing:.04em">{{ r.sym }}</div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ r.type }} · {{ r.ex }}{{ r.ownedF }}</span></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end"><span style="font-size:14px;font-weight:500">{{ r.priceF }}</span><span style="font-size:11px;font-weight:500;color:{{ r.color }}">{{ r.r1yF }} 1 anno</span></div>
+          </button>
+        </sc-for>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}"><p style="font-size:13px;color:var(--color-neutral-700)">Nessun titolo trovato.</p></sc-if>
+        <p style="font-size:11px;color:var(--color-neutral-600);margin:12px 0 0">Prezzi e rendimenti di esempio, non aggiornati.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ asOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:11;background:var(--color-bg);display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;padding:12px 20px 0;font-size:12px;font-weight:500"><span>9:41</span><span>●●● ▮</span></div>
+      <div style="display:flex;align-items:center;padding:8px 12px 0">
+        <button onClick="{{ asClose }}" class="btn btn-ghost" style="font-size:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m15 18-6-6 6-6"></path></svg>Indietro</button>
+      </div>
+      <div style="flex:1;overflow:auto;padding:6px 20px 20px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">{{ as.sym }} · {{ as.type }} · {{ as.ex }}</span>
+          <h3 style="margin:0">{{ as.name }}</h3>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px"><span style="font-family:var(--font-heading);font-weight:600;font-size:40px;line-height:1">{{ as.priceF }}</span><span style="font-size:14px;font-weight:500;color:{{ as.color }}">{{ as.r1yF }} in 1 anno</span></div>
+          <sc-if value="{{ as.isUsd }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--color-neutral-800)">≈ € {{ as.priceEurF }} al cambio 1,08</span></sc-if>
+        </div>
+        <div class="blueprint" style="padding:10px 8px 6px">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <svg viewBox="0 0 320 120" preserveAspectRatio="none" style="width:100%;height:120px;display:block">
+            <line x1="0" y1="8" x2="320" y2="8" stroke="var(--color-divider)" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="0" y1="60" x2="320" y2="60" stroke="var(--color-divider)" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="0" y1="112" x2="320" y2="112" stroke="var(--color-divider)" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <polygon points="{{ as.area }}" fill="var(--color-accent-100)"></polygon>
+            <polyline points="{{ as.pts }}" fill="none" stroke="var(--color-accent-700)" stroke-width="1.5" vector-effect="non-scaling-stroke"></polyline>
+          </svg>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-neutral-700);padding-top:4px"><span>ott 2025</span><span>min {{ as.minF }} · max {{ as.maxF }}</span><span>oggi</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--color-divider);border-left:1px solid var(--color-divider)">
+          <div style="padding:8px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Rendimento 1 anno</div><div style="font-family:var(--font-heading);font-weight:600;font-size:19px">{{ as.r1yF }}</div></div>
+          <div style="padding:8px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Da inizio anno</div><div style="font-family:var(--font-heading);font-weight:600;font-size:19px">{{ as.ytdF }}</div></div>
+          <div style="padding:8px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">{{ as.yldLabel }}</div><div style="font-family:var(--font-heading);font-weight:600;font-size:19px">{{ as.yldF }}</div></div>
+          <div style="padding:8px 12px;border-right:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)"><div class="card-kicker" style="color:var(--color-accent-700)">Tasse sul guadagno</div><div style="font-family:var(--font-heading);font-weight:600;font-size:19px">{{ as.trF }}</div></div>
+        </div>
+        <sc-if value="{{ as.owned }}" hint-placeholder-val="{{ false }}">
+          <div class="card blueprint" style="padding:14px 16px;gap:0">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <span class="card-kicker" style="color:var(--color-accent-700)">La tua posizione</span>
+            <div style="display:flex;align-items:baseline;gap:8px;margin:2px 0 8px"><span style="font-family:var(--font-heading);font-weight:600;font-size:30px;line-height:1">€ {{ pos.valueF }}</span><span style="font-size:14px;font-weight:500;color:{{ pos.color }}">{{ pos.gainPctF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-top:1px solid var(--color-divider)"><span>Quote</span><span>{{ pos.qtyF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Prezzo medio di carico</span><span>{{ pos.avgF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Investito (commissioni € {{ pos.feeF }})</span><span>€ {{ pos.costF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Guadagno/perdita</span><span style="font-weight:500;color:{{ pos.color }}">{{ pos.gainF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>Tasse se vendi ({{ as.trF }})</span><span>− € {{ pos.taxF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>{{ pos.divLabel }}</span><span>€ {{ pos.divF }} → netti € {{ pos.divNetF }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0 0;margin-top:4px;border-top:1px dashed var(--color-neutral-500);font-family:var(--font-heading);font-weight:600;font-size:17px"><span>Netto se vendi oggi</span><span>€ {{ pos.netF }}</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <h5 style="margin:0 0 2px">Acquisti</h5>
+            <sc-for list="{{ pos.lots }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--color-divider)">
+                <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">{{ l.qtyF }} quote a {{ l.priceF }}</span><span style="font-size:11px;color:var(--color-neutral-700)">{{ l.date }} · commissioni € {{ l.feeF }}</span></div>
+                <span style="font-size:14px;font-weight:500">€ {{ l.totF }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ as.pacF }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--color-accent-800)">{{ as.pacF }}</span></sc-if>
+      </div>
+      <div style="padding:12px 20px 26px;border-top:1px solid var(--color-divider)">
+        <button onClick="{{ buyOpen }}" class="btn btn-primary blueprint" style="width:100%;height:48px;font-size:17px">Compra {{ as.sym }}<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}"><dc-import name="AddSheet" initial-type="{{ sheetType }}" on-save="{{ saveTx }}" on-close="{{ closeSheet }}" style="position:absolute;inset:0;z-index:20" hint-size="100%,100%"></dc-import></sc-if>
+
+  <sc-if value="{{ buyOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:21;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ buyClose }}" style="position:absolute;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 45%, transparent)"></div>
+      <div style="position:relative;background:var(--color-bg);border-top:1px solid var(--color-divider);padding:18px 20px 24px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-lg)">
+        <div style="display:flex;justify-content:space-between;align-items:center"><h4 style="margin:0">Compra {{ as.sym }}</h4><button onClick="{{ buyClose }}" class="btn btn-ghost" style="font-size:14px">Annulla</button></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--color-divider)">
+          <button onClick="{{ buyModeQty }}" style="cursor:pointer;border:0;padding:8px 0;font-size:13px;font-family:var(--font-body);background:{{ bmQtyBg }};color:{{ bmQtyColor }}">Quote e prezzo</button>
+          <button onClick="{{ buyModeAmt }}" style="cursor:pointer;border:0;border-left:1px solid var(--color-divider);padding:8px 0;font-size:13px;font-family:var(--font-body);background:{{ bmAmtBg }};color:{{ bmAmtColor }}">Importo totale</button>
+        </div>
+        <sc-if value="{{ bmIsQty }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="field"><label>Quote</label><input class="input" inputMode="decimal" value="{{ bQty }}" onChange="{{ bSetQty }}" placeholder="0"></div>
+            <div class="field"><label>Prezzo ({{ bCurSym }})</label><input class="input" inputMode="decimal" value="{{ bPrice }}" onChange="{{ bSetPrice }}"></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ bmIsAmt }}" hint-placeholder-val="{{ false }}">
+          <div class="field"><label>Importo da investire (€, commissioni incluse)</label><input class="input" inputMode="decimal" value="{{ bAmt }}" onChange="{{ bSetAmt }}" placeholder="0,00"></div>
+        </sc-if>
+        <div class="field"><label>Commissioni (€)</label><input class="input" inputMode="decimal" value="{{ bFee }}" onChange="{{ bSetFee }}" placeholder="0,00"></div>
+        <button onClick="{{ bTogglePac }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14px">Ripeti ogni mese (PAC)</span><span style="font-size:11px;color:var(--color-neutral-700)">Stesso importo, conteggiato nelle spese fisse</span></div>
+          <span style="width:38px;height:20px;flex:none;border:1px solid var(--color-divider);position:relative;background:{{ pacTrack }}"><span style="position:absolute;top:2px;left:{{ pacKnob }};width:14px;height:14px;background:{{ pacKnobBg }};transition:left .2s"></span></span>
+        </button>
+        <sc-if value="{{ bPac }}" hint-placeholder-val="{{ false }}">
+          <div class="field"><label>Giorno del mese</label><input class="input" inputMode="numeric" value="{{ bPacDay }}" onChange="{{ bSetPacDay }}" placeholder="1–28"></div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:2px;padding:10px 0 0;border-top:1px dashed var(--color-neutral-500)">
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-weight:600;font-size:18px"><span>{{ bQtyLine }}</span><span>€ {{ bTotF }}</span></div>
+          <span style="font-size:11px;color:var(--color-neutral-700)">{{ bNote }}</span>
+        </div>
+        <button onClick="{{ buyConfirm }}" disabled="{{ bInvalid }}" class="btn btn-primary blueprint" style="height:48px;font-size:17px;width:100%">Conferma acquisto<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ edOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ edClose }}" style="position:absolute;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 45%, transparent)"></div>
+      <div style="position:relative;background:var(--color-bg);border-top:1px solid var(--color-divider);padding:18px 20px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow-lg)">
+        <div style="display:flex;justify-content:space-between;align-items:center"><h4 style="margin:0">{{ edTitle }}</h4><button onClick="{{ edClose }}" class="btn btn-ghost" style="font-size:14px">Annulla</button></div>
+        <div class="field"><label>Nome</label><input class="input" value="{{ edName }}" onChange="{{ edSetName }}" placeholder="Es. Affitto"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field"><label>Importo (€)</label><input class="input" inputMode="decimal" value="{{ edAmt }}" onChange="{{ edSetAmt }}" placeholder="0,00"></div>
+          <div class="field"><label>Giorno del mese</label><input class="input" inputMode="numeric" value="{{ edDay }}" onChange="{{ edSetDay }}" placeholder="1–31"></div>
+        </div>
+        <button onClick="{{ edSave }}" disabled="{{ edInvalid }}" class="btn btn-primary blueprint" style="height:48px;font-size:17px;width:100%">Salva<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+        <sc-if value="{{ edCanDelete }}" hint-placeholder-val="{{ false }}"><button onClick="{{ edDelete }}" class="btn btn-secondary" style="height:44px;font-size:15px;width:100%;color:var(--color-accent-800)">Elimina</button></sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ peOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ peClose }}" style="position:absolute;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 45%, transparent)"></div>
+      <div style="position:relative;background:var(--color-bg);border-top:1px solid var(--color-divider);padding:18px 20px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow-lg)">
+        <div style="display:flex;justify-content:space-between;align-items:center"><h4 style="margin:0">{{ peTitle }}</h4><button onClick="{{ peClose }}" class="btn btn-ghost" style="font-size:14px">Annulla</button></div>
+        <div class="field"><label>Nome</label><input class="input" value="{{ peName }}" onChange="{{ peSetName }}" placeholder="Es. Vacanze"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field"><label>Obiettivo (€)</label><input class="input" inputMode="decimal" value="{{ peGoal }}" onChange="{{ peSetGoal }}" placeholder="0"></div>
+          <div class="field"><label>Entro (MM/AAAA)</label><input class="input" inputMode="numeric" value="{{ peDate }}" onChange="{{ peSetDate }}" placeholder="06/2027"></div>
+        </div>
+        <div class="field"><label>Quota mensile (€)</label><input class="input" inputMode="decimal" value="{{ peQuota }}" onChange="{{ peSetQuota }}" placeholder="0"></div>
+        <span style="font-size:11px;color:var(--color-neutral-700)">{{ peHint }}</span>
+        <button onClick="{{ peSave }}" disabled="{{ peInvalid }}" class="btn btn-primary blueprint" style="height:48px;font-size:17px;width:100%">Salva<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+        <sc-if value="{{ peCanDelete }}" hint-placeholder-val="{{ false }}"><button onClick="{{ peDelete }}" class="btn btn-secondary" style="height:44px;font-size:15px;width:100%;color:var(--color-accent-800)">Elimina salvadanaio</button></sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RATE = 1.08;
+const MESI = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+const CAT = [
+  ['AAPL', 'Apple', 'Azioni', 'NASDAQ', 'USD', 228.5, 22.4, 16.8, 0.44],
+  ['MSFT', 'Microsoft', 'Azioni', 'NASDAQ', 'USD', 425.3, 14.1, 10.2, 0.72],
+  ['NVDA', 'NVIDIA', 'Azioni', 'NASDAQ', 'USD', 132.8, 118.5, 96.3, 0.03],
+  ['AMZN', 'Amazon', 'Azioni', 'NASDAQ', 'USD', 186.4, 31.2, 22.6, 0],
+  ['GOOGL', 'Alphabet A', 'Azioni', 'NASDAQ', 'USD', 167.2, 19.8, 18.1, 0.48],
+  ['TSLA', 'Tesla', 'Azioni', 'NASDAQ', 'USD', 241.0, -4.6, -2.9, 0],
+  ['ENI', 'Eni', 'Azioni', 'Borsa Italiana', 'EUR', 14.12, -6.2, -3.1, 7.1],
+  ['ISP', 'Intesa Sanpaolo', 'Azioni', 'Borsa Italiana', 'EUR', 3.92, 38.4, 28.7, 7.6],
+  ['ENEL', 'Enel', 'Azioni', 'Borsa Italiana', 'EUR', 7.18, 14.9, 6.2, 6.0],
+  ['RACE', 'Ferrari', 'Azioni', 'Borsa Italiana', 'EUR', 432.6, 32.7, 26.4, 0.6],
+  ['STLAM', 'Stellantis', 'Azioni', 'Borsa Italiana', 'EUR', 12.4, -41.3, -38.0, 12.4],
+  ['UCG', 'UniCredit', 'Azioni', 'Borsa Italiana', 'EUR', 38.5, 52.1, 40.2, 5.4],
+  ['ASML', 'ASML Holding', 'Azioni', 'Euronext', 'EUR', 712.4, -2.8, 4.1, 0.9],
+  ['VWCE', 'Vanguard FTSE All-World Acc', 'ETF', 'Borsa Italiana', 'EUR', 124.6, 24.3, 19.5, 0],
+  ['SWDA', 'iShares Core MSCI World Acc', 'ETF', 'Borsa Italiana', 'EUR', 98.4, 25.1, 20.2, 0],
+  ['CSSPX', 'iShares Core S&P 500 Acc', 'ETF', 'Borsa Italiana', 'EUR', 562.1, 30.6, 24.8, 0],
+  ['EIMI', 'iShares Core MSCI EM IMI Acc', 'ETF', 'Borsa Italiana', 'EUR', 33.2, 13.4, 9.8, 0],
+  ['VHYL', 'Vanguard FTSE All-World High Div', 'ETF', 'Borsa Italiana', 'EUR', 66.8, 18.2, 13.5, 3.1],
+  ['BTC', 'Bitcoin', 'Crypto', 'Crypto', 'USD', 62400, 58.3, 47.6, 0],
+  ['ETH', 'Ethereum', 'Crypto', 'Crypto', 'USD', 2450, -5.4, 7.2, 0],
+  ['SOL', 'Solana', 'Crypto', 'Crypto', 'USD', 145.2, 92.1, 48.0, 0],
+  ['BTPV28', 'BTP Valore ott 2028', 'Obbligazioni', 'MOT', 'EUR', 101.2, 4.1, 3.4, 3.6],
+  ['BTP33', 'BTP 4,35% nov 2033', 'Obbligazioni', 'MOT', 'EUR', 104.8, 6.3, 4.9, 4.35],
+  ['BTPI30', 'BTP Italia mag 2030', 'Obbligazioni', 'MOT', 'EUR', 99.6, 2.8, 2.1, 1.6],
+  ['AMGEQ', 'Amundi Global Equity A', 'Fondi', 'Fondo', 'EUR', 18.42, 17.6, 13.2, 0],
+  ['EURIT', 'Eurizon Azioni Italia R', 'Fondi', 'Fondo', 'EUR', 9.87, 21.3, 15.9, 0]
+].map(a => ({ sym: a[0], name: a[1], type: a[2], ex: a[3], cur: a[4], price: a[5], r1y: a[6], ytd: a[7], yld: a[8] }));
+const BYSYM = {}; CAT.forEach(c => { BYSYM[c.sym] = c; });
+const SEED = () => ({
+  incomes: [{ id: 'i1', name: 'Stipendio', amt: 1850, day: 1 }, { id: 'i2', name: 'Freelance', amt: 320, day: 10 }],
+  fixed: [
+    { id: 'f1', name: 'Affitto', amt: 650, day: 1 }, { id: 'f2', name: 'Bollette luce e gas', amt: 85, day: 15 },
+    { id: 'f3', name: 'Telefono', amt: 12.99, day: 18 }, { id: 'f4', name: 'Palestra', amt: 35, day: 20 },
+    { id: 'f5', name: 'Netflix', amt: 12.99, day: 22 }, { id: 'f6', name: 'Assicurazione auto', amt: 48, day: 28 }
+  ],
+  tx: [
+    { id: 't1', name: 'Esselunga', cat: 'Spesa', amt: -84.3, day: 3 }, { id: 't2', name: 'Benzina', cat: 'Trasporti', amt: -60, day: 5 },
+    { id: 't3', name: 'Cena fuori', cat: 'Ristoranti', amt: -46.5, day: 8 }, { id: 't4', name: 'Spesa settimanale', cat: 'Spesa', amt: -72.4, day: 10 },
+    { id: 't5', name: 'Cinema', cat: 'Svago', amt: -19, day: 11 }, { id: 't6', name: 'Amazon', cat: 'Casa', amt: -38.9, day: 12 },
+    { id: 't7', name: 'Treno Milano', cat: 'Trasporti', amt: -24.8, day: 13 }, { id: 't8', name: 'Supermercato', cat: 'Spesa', amt: -66.5, day: 14 }
+  ],
+  piggies: [
+    { id: 'p1', name: 'Fondo emergenza', goal: 5000, tm: 12, ty: 2027, quota: 100, base: 2350, hist: [{ id: 'h1', date: '1 set', label: 'Quota mensile', amt: 100 }, { id: 'h2', date: '1 ago', label: 'Quota mensile', amt: 100 }, { id: 'h3', date: '20 lug', label: 'Prelievo', amt: -300 }] },
+    { id: 'p2', name: 'Vacanze Giappone', goal: 3000, tm: 6, ty: 2027, quota: 150, base: 900, hist: [{ id: 'h4', date: '9 ott', label: 'Versamento', amt: 100, cur: true }, { id: 'h5', date: '1 set', label: 'Quota mensile', amt: 150 }] },
+    { id: 'p3', name: 'Auto nuova', goal: 8000, tm: 12, ty: 2028, quota: 50, base: 1200, hist: [{ id: 'h6', date: '1 set', label: 'Quota mensile', amt: 50 }] }
+  ],
+  lots: [
+    { id: 'l1', sym: 'VWCE', qty: 18, price: 108.4, fee: 2.95, date: '5 mar 2025' },
+    { id: 'l2', sym: 'AAPL', qty: 5, price: 190, fee: 9, date: '12 nov 2024' },
+    { id: 'l3', sym: 'ENI', qty: 120, price: 13.8, fee: 5, date: '3 feb 2026' },
+    { id: 'l4', sym: 'BTC', qty: 0.015, price: 55000, fee: 1.5, date: '20 giu 2025' },
+    { id: 'l5', sym: 'BTPV28', qty: 20, price: 99.5, fee: 4, date: '8 gen 2026' }
+  ],
+  pacs: [{ id: 'c1', sym: 'VWCE', amt: 150, day: 5 }],
+  payday: 1, alert: 0, perDay: true, extra: true
+});
+const KEY = 'saldo-app-v2';
+const DATA_KEYS = ['incomes', 'fixed', 'tx', 'piggies', 'lots', 'pacs', 'payday', 'alert', 'perDay', 'extra'];
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    this.state = { ...SEED(), ...(saved || {}), tab: 'home', fsTab: 'spese', sheet: null, ed: null, filter: 'all', openTx: null,
+      pgId: null, pgMode: null, pgAmt: '', pe: null, srch: false, q: '', qType: 'Tutti', prefill: null, asSym: null, buy: null };
+  }
+  today = 14;
+  componentDidUpdate() {
+    const d = {}; DATA_KEYS.forEach(k => { d[k] = this.state[k]; });
+    try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
+  }
+  fmt(n) { const [i, d] = Math.abs(n).toFixed(2).split('.'); return i.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + d; }
+  fq(n) { const r = Math.round(n * 10000) / 10000; const [i, d] = String(Math.abs(r)).split('.'); return i.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (d ? ',' + d : ''); }
+  pc(n) { return (n >= 0 ? '+' : '−') + Math.abs(n).toFixed(1).replace('.', ',') + '%'; }
+  sg(n) { return (n >= 0 ? '+ € ' : '− € ') + this.fmt(n); }
+  num(s) { return parseFloat(String(s || '').replace(',', '.')); }
+  eur(c, v) { return c.cur === 'USD' ? v / RATE : v; }
+  fo(c, v) { return (c.cur === 'USD' ? '$ ' : '€ ') + this.fmt(v); }
+  uid() { return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  gc(n) { return n >= 0 ? 'var(--color-accent-700)' : 'var(--color-text)'; }
+  holdings(lots) {
+    const m = {};
+    lots.forEach(l => { const c = BYSYM[l.sym]; if (!c) return; const h = m[l.sym] || (m[l.sym] = { c, qty: 0, costO: 0, fee: 0, lots: [] }); h.qty += l.qty; h.costO += l.qty * l.price; h.fee += l.fee; h.lots.push(l); });
+    return Object.values(m).map(h => {
+      const c = h.c, cost = this.eur(c, h.costO) + h.fee, value = this.eur(c, h.qty * c.price), gain = value - cost;
+      const tr = c.type === 'Obbligazioni' ? 0.125 : 0.26, tax = Math.max(0, gain) * tr, div = value * c.yld / 100;
+      return { ...h, avgO: h.costO / h.qty, cost, value, gain, gainPct: cost ? gain / cost * 100 : 0, tr, tax, net: value - tax, div, divNet: div * (1 - tr) };
+    });
+  }
+  chart(c) {
+    const n = 30; let seed = 0; for (const ch of c.sym) seed = (seed * 31 + ch.charCodeAt(0)) % 9973;
+    const start = c.price / (1 + c.r1y / 100), v = [];
+    for (let i = 0; i < n; i++) { const t = i / (n - 1); const noise = Math.sin(i * 1.7 + seed) * 0.5 + Math.sin(i * 0.6 + seed * 0.3) * 0.5; v.push(start + (c.price - start) * t + noise * c.price * 0.035); }
+    v[0] = start; v[n - 1] = c.price;
+    const min = Math.min(...v), max = Math.max(...v);
+    const pts = v.map((x, i) => `${(i / (n - 1) * 320).toFixed(1)},${(112 - (x - min) / (max - min || 1) * 104).toFixed(1)}`).join(' ');
+    return { pts, area: `0,120 ${pts} 320,120`, min, max };
+  }
+  pgCalc(p) {
+    const T = this.today, f = n => this.fmt(n);
+    const manual = (p.hist || []).filter(e => e.cur).reduce((x, e) => x + e.amt, 0);
+    const saved = p.base + manual;
+    const months = (p.ty - 2026) * 12 + (p.tm - 10);
+    const left = Math.max(0, p.goal - saved);
+    const need = months > 0 ? left / months : left;
+    let hint, hintColor = 'var(--color-neutral-800)';
+    if (left <= 0) { hint = 'Obiettivo raggiunto'; hintColor = 'var(--color-accent-700)'; }
+    else if (months <= 0) { hint = 'Data obiettivo passata: aggiornala'; hintColor = 'var(--color-accent-800)'; }
+    else if (p.quota >= need) { hint = `Con questa quota arrivi in tempo (servono € ${f(need)}/mese)`; hintColor = 'var(--color-accent-700)'; }
+    else { hint = `Servono € ${f(need)}/mese: la quota è sotto di € ${f(need - p.quota)}`; hintColor = 'var(--color-accent-800)'; }
+    const cur = (p.hist || []).filter(e => e.cur).slice().reverse();
+    const past = (p.hist || []).filter(e => !e.cur);
+    const hist = [...cur, { id: 'q', date: '1 ott', label: 'Quota mensile', amt: p.quota }, ...past].filter(e => e.amt !== 0)
+      .map(e => ({ ...e, amtF: (e.amt >= 0 ? '+ ' : '− ') + f(e.amt), color: e.amt >= 0 ? 'var(--color-accent-700)' : 'var(--color-text)' }));
+    const pct = p.goal ? Math.min(100, saved / p.goal * 100) : 0;
+    return { ...p, saved, manual, savedF: f(saved), goalF: this.fq(p.goal), quotaF: this.fq(p.quota), leftF: f(left), needF: left <= 0 ? '—' : `€ ${f(need)}`,
+      dateF: `${MESI[p.tm - 1]} ${p.ty}`, pctF: Math.round(pct) + '%', w: pct + '%', hint, hintColor, hist };
+  }
+  renderVals() {
+    const s = this.state, T = this.today, f = n => this.fmt(n);
+    const sum = a => a.reduce((x, y) => x + y.amt, 0);
+    const extraIn = s.tx.filter(t => t.amt > 0).reduce((x, t) => x + t.amt, 0);
+    const incFixed = sum(s.incomes);
+    const income = incFixed + (s.extra ? extraIn : 0);
+    const pacTot = sum(s.pacs);
+    const fixed = sum(s.fixed) + pacTot;
+    const spent = -s.tx.filter(t => t.amt < 0 && t.cat !== 'Investimento').reduce((x, t) => x + t.amt, 0);
+    const invested = -s.tx.filter(t => t.cat === 'Investimento').reduce((x, t) => x + t.amt, 0);
+    const pgs = s.piggies.map(p => this.pgCalc(p));
+    const quotaTot = pgs.reduce((x, p) => x + p.quota, 0);
+    const saveMonth = quotaTot + pgs.reduce((x, p) => x + p.manual, 0);
+    const sp = income - fixed - spent - invested - saveMonth;
+    const H = this.holdings(s.lots);
+    const pf = H.reduce((a, h) => ({ value: a.value + h.value, cost: a.cost + h.cost, tax: a.tax + h.tax, divNet: a.divNet + h.divNet }), { value: 0, cost: 0, tax: 0, divNet: 0 });
+    const pfGain = pf.value - pf.cost;
+    const pgTotal = pgs.reduce((x, p) => x + p.saved, 0);
+    const P = s.payday;
+    const daysLeft = P <= T ? 31 - T + P : P - T;
+    const periodLabel = P === 1 ? 'Ottobre 2026' : P <= T ? `${P} ott – ${P - 1} nov` : `${P} set – ${P - 1} ott`;
+    const perDayN = Math.max(0, sp) / daysLeft;
+    const pct = v => Math.max(0, Math.min(100, income ? v / income * 100 : 0));
+    const txRow = t => ({ ...t, amtF: (t.amt > 0 ? '+ ' : '− ') + f(t.amt), color: t.amt > 0 ? 'var(--color-accent-700)' : 'var(--color-text)', sub: `${t.cat} · ${t.day === T ? 'Oggi' : t.day + ' ott'}` });
+    const sorted = [...s.tx].sort((a, b) => b.day - a.day);
+    const filtered = sorted.filter(t => s.filter === 'all' || (s.filter === 'in' ? t.amt > 0 : t.amt < 0));
+    const days = [...new Set(filtered.map(t => t.day))];
+    const groups = days.map(d => {
+      const items = filtered.filter(t => t.day === d);
+      const tot = items.reduce((x, t) => x + t.amt, 0);
+      return {
+        label: d === T ? 'Oggi' : d === T - 1 ? 'Ieri' : `${d} ottobre`, totF: (tot >= 0 ? '+ ' : '− ') + f(tot),
+        items: items.map(t => ({ ...txRow(t), isInv: !!t.lotId, open: s.openTx === t.id,
+          toggle: () => this.setState({ openTx: s.openTx === t.id ? null : t.id }),
+          remove: () => this.setState(st => ({ tx: st.tx.filter(x => x.id !== t.id), lots: t.lotId ? st.lots.filter(l => l.id !== t.lotId) : st.lots, openTx: null })) }))
+      };
+    });
+    const tab = (id, fs) => () => this.setState(fs ? { tab: id, fsTab: fs, openTx: null } : { tab: id, openTx: null });
+    const tc = id => s.tab === id ? 'var(--color-accent-700)' : 'var(--color-neutral-600)';
+    const seg = (opts, cur, set) => opts.map(([id, label], i) => ({ label, pick: () => set(id), bg: cur === id ? 'var(--color-accent)' : 'transparent', color: cur === id ? 'var(--color-bg)' : 'var(--color-text)', sep: i ? '1px solid var(--color-divider)' : '0' }));
+    const edRow = kind => x => ({ ...x, amtF: f(x.amt), status: x.day <= T ? 'Già addebitata' : x.day - T === 1 ? 'Domani' : `Tra ${x.day - T} giorni`, edit: () => this.setState({ ed: { kind, id: x.id, name: x.name, amt: String(x.amt).replace('.', ','), day: String(x.day) } }) });
+    const ed = s.ed;
+    const edAmtN = ed ? this.num(ed.amt) : 0, edDayN = ed ? parseInt(ed.day, 10) : 0;
+    const edInvalid = !ed || !ed.name.trim() || !(edAmtN > 0) || !(edDayN >= 1 && edDayN <= 31);
+    const tog = on => ({ track: on ? 'var(--color-accent-100)' : 'transparent', knob: on ? '20px' : '2px', bg: on ? 'var(--color-accent)' : 'var(--color-neutral-400)' });
+    const ex = tog(s.extra), pd = tog(s.perDay);
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const openAsset = sym => () => this.setState({ asSym: sym });
+    const fixRows = [...s.fixed].sort((a, b) => a.day - b.day).map(edRow('fix'));
+    s.pacs.forEach(p => { const c = BYSYM[p.sym]; if (c) fixRows.push({ id: p.id, day: p.day, name: `PAC ${c.sym}`, amtF: f(p.amt), status: 'Investimento ricorrente', edit: () => this.setState({ tab: 'fix', fsTab: 'inv' }) }); });
+    fixRows.sort((a, b) => a.day - b.day);
+
+    const pg = s.pgId ? pgs.find(p => p.id === s.pgId) : null;
+    const pgAmtN = this.num(s.pgAmt);
+    const pgAmtInvalid = !(pgAmtN > 0) || (s.pgMode === 'out' && pg && pgAmtN > pg.saved);
+    const pe = s.pe;
+    const peM = pe ? /^(\d{1,2})\/(\d{4})$/.exec(pe.date.trim()) : null;
+    const peInvalid = !pe || !pe.name.trim() || !(this.num(pe.goal) > 0) || !(this.num(pe.quota) >= 0) || !peM || +peM[1] < 1 || +peM[1] > 12;
+
+    const ql = s.q.trim().toLowerCase();
+    const ownedSyms = new Set(H.map(h => h.c.sym));
+    const results = CAT.filter(c => (s.qType === 'Tutti' || c.type === s.qType) && (!ql || c.sym.toLowerCase().includes(ql) || c.name.toLowerCase().includes(ql)))
+      .map(c => ({ ...c, priceF: this.fo(c, c.price), r1yF: this.pc(c.r1y), color: this.gc(c.r1y), ownedF: ownedSyms.has(c.sym) ? ' · in portafoglio' : '', open: openAsset(c.sym) }));
+    const typeChips = ['Tutti', 'Azioni', 'ETF', 'Crypto', 'Obbligazioni', 'Fondi'].map(t => ({ label: t, pick: () => this.setState({ qType: t }), bg: s.qType === t ? 'var(--color-accent-100)' : 'transparent', color: s.qType === t ? 'var(--color-accent-800)' : 'var(--color-text)', border: s.qType === t ? 'var(--color-accent)' : 'var(--color-divider)' }));
+
+    const ac = s.asSym ? BYSYM[s.asSym] : null;
+    let asV = {}, posV = {};
+    if (ac) {
+      const ch = this.chart(ac), tr = ac.type === 'Obbligazioni' ? 0.125 : 0.26;
+      const pac = s.pacs.find(p => p.sym === ac.sym);
+      asV = { ...ac, priceF: this.fo(ac, ac.price), priceEurF: f(ac.price / RATE), isUsd: ac.cur === 'USD', r1yF: this.pc(ac.r1y), ytdF: this.pc(ac.ytd), color: this.gc(ac.r1y),
+        yldLabel: ac.type === 'Obbligazioni' ? 'Cedola annua' : 'Dividendo annuo', yldF: ac.yld ? ac.yld.toFixed(2).replace('.', ',') + '%' : '—',
+        trF: (tr * 100).toString().replace('.', ',') + '%', pts: ch.pts, area: ch.area, minF: this.fo(ac, ch.min), maxF: this.fo(ac, ch.max),
+        owned: ownedSyms.has(ac.sym), pacF: pac ? `PAC attivo: € ${f(pac.amt)} ogni mese il giorno ${pac.day}` : '' };
+      const h = H.find(x => x.c.sym === ac.sym);
+      if (h) posV = { valueF: f(h.value), gainPctF: this.pc(h.gainPct), color: this.gc(h.gain), qtyF: this.fq(h.qty), avgF: this.fo(ac, h.avgO) + (ac.cur === 'USD' ? ` (€ ${f(h.avgO / RATE)})` : ''),
+        feeF: f(h.fee), costF: f(h.cost), gainF: this.sg(h.gain), taxF: f(h.tax), netF: f(h.net),
+        divLabel: ac.type === 'Obbligazioni' ? 'Cedole annue stimate' : 'Dividendi annui stimati', divF: f(h.div), divNetF: f(h.divNet),
+        lots: h.lots.slice().reverse().map(l => ({ ...l, qtyF: this.fq(l.qty), priceF: this.fo(ac, l.price), feeF: f(l.fee), totF: f(this.eur(ac, l.qty * l.price) + l.fee) })) };
+    }
+    const b = s.buy;
+    let bv = { qty: 0, tot: 0, invalid: true };
+    if (b && ac) {
+      const fee = this.num(b.fee) || 0;
+      if (b.mode === 'qty') { const q = this.num(b.qty), pr = this.num(b.price); bv = { qty: q, price: pr, tot: q > 0 && pr > 0 ? this.eur(ac, q * pr) + fee : 0 }; }
+      else { const a = this.num(b.amt), pr = ac.price, q = a > fee ? (a - fee) / this.eur(ac, pr) : 0; bv = { qty: q, price: pr, tot: a > 0 ? a : 0 }; }
+      const pd2 = parseInt(b.pacDay, 10);
+      bv.invalid = !(bv.qty > 0) || !(bv.tot > 0) || (b.pac && !(pd2 >= 1 && pd2 <= 28));
+      bv.pacDay = pd2; bv.fee = fee;
+    }
+    const pt = tog(b && b.pac);
+    const setB = (k, clean) => e => { const v = clean ? clean(e.target.value) : e.target.value; this.setState(st => ({ buy: { ...st.buy, [k]: v } })); };
+    const dec = v => v.replace(/[^\d,.]/g, '');
+    const bmOn = m => b && b.mode === m;
+
+    return {
+      isHome: s.tab === 'home', isMov: s.tab === 'mov', isFix: s.tab === 'fix', isSet: s.tab === 'set',
+      goHome: tab('home'), goMov: tab('mov'), goFix: tab('fix'), goSet: tab('set'), goFixSp: tab('fix', 'spese'), goRisp: tab('fix', 'risp'), goInv: tab('fix', 'inv'),
+      cHome: tc('home'), cMov: tc('mov'), cFix: tc('fix'), cSet: tc('set'),
+      periodLabel, daysLeftLabel: `${daysLeft} giorni rimasti`,
+      spendable: (sp < 0 ? '−' : '') + f(sp), perDay: f(perDayN), showPerDay: s.perDay,
+      netWorth: f(sp + pgTotal + pf.value),
+      alertOn: s.alert > 0 && perDayN < s.alert,
+      alertText: `Sei sotto la tua soglia di € ${s.alert} al giorno. Restano € ${f(perDayN)} al giorno fino a fine periodo.`,
+      income: f(income), fixed: f(fixed), spent: f(spent), setAside: f(saveMonth + invested),
+      wFixed: pct(fixed) + '%', wSpent: pct(spent) + '%', wSave: pct(saveMonth) + '%', wInv: pct(invested) + '%', pAvail: Math.round(pct(Math.max(0, sp))) + '%',
+      recent: sorted.slice(0, 4).map(txRow),
+      openIn: () => this.setState({ sheet: 'in' }), openOut: () => this.setState({ sheet: 'out' }),
+      sheetOpen: !!s.sheet, sheetType: s.sheet || 'out',
+      closeSheet: () => this.setState({ sheet: null }),
+      saveTx: ({ type, amt, cat, rec }) => this.setState(st => {
+        const id = this.uid();
+        if (cat === 'Investimento') return { sheet: null, srch: true, q: '', qType: 'Tutti', prefill: amt };
+        if (rec) return type === 'in' ? { incomes: [...st.incomes, { id, name: cat, amt, day: T }], sheet: null } : { fixed: [...st.fixed, { id, name: cat, amt, day: T }], sheet: null };
+        return { tx: [...st.tx, { id, name: cat, cat, amt: type === 'in' ? amt : -amt, day: T }], sheet: null };
+      }),
+      filters: seg([['all', 'Tutti'], ['in', 'Entrate'], ['out', 'Uscite']], s.filter, id => this.setState({ filter: id })),
+      movIn: f(filtered.filter(t => t.amt > 0).reduce((x, t) => x + t.amt, 0)), movOut: f(-filtered.filter(t => t.amt < 0).reduce((x, t) => x + t.amt, 0)),
+      groups, movEmpty: groups.length === 0,
+      fsTabs: seg([['spese', 'Spese fisse'], ['risp', 'Risparmi'], ['inv', 'Investimenti']], s.fsTab, id => this.setState({ fsTab: id })),
+      fsSpese: s.fsTab === 'spese', fsRisp: s.fsTab === 'risp', fsInv: s.fsTab === 'inv',
+      incFixedTot: f(incFixed),
+      incRows: [...s.incomes].sort((a, b2) => a.day - b2.day).map(edRow('inc')),
+      fixRows,
+      newInc: () => this.setState({ ed: { kind: 'inc', id: null, name: '', amt: '', day: '' } }),
+      newFix: () => this.setState({ ed: { kind: 'fix', id: null, name: '', amt: '', day: '' } }),
+      edOpen: !!ed, edTitle: ed ? `${ed.id ? 'Modifica' : 'Nuova'} ${ed.kind === 'inc' ? 'entrata fissa' : 'spesa fissa'}` : '',
+      edName: ed ? ed.name : '', edAmt: ed ? ed.amt : '', edDay: ed ? ed.day : '',
+      edSetName: e => { const v = e.target.value; this.setState(st => ({ ed: { ...st.ed, name: v } })); },
+      edSetAmt: e => { const v = dec(e.target.value); this.setState(st => ({ ed: { ...st.ed, amt: v } })); },
+      edSetDay: e => { const v = e.target.value.replace(/\D/g, '').slice(0, 2); this.setState(st => ({ ed: { ...st.ed, day: v } })); },
+      edInvalid, edCanDelete: !!(ed && ed.id),
+      edClose: () => this.setState({ ed: null }),
+      edSave: () => {
+        if (edInvalid) return;
+        const k = ed.kind === 'inc' ? 'incomes' : 'fixed';
+        const item = { id: ed.id || this.uid(), name: ed.name.trim(), amt: edAmtN, day: edDayN };
+        this.setState(st => ({ [k]: ed.id ? st[k].map(x => x.id === ed.id ? item : x) : [...st[k], item], ed: null }));
+      },
+      edDelete: () => { const k = ed.kind === 'inc' ? 'incomes' : 'fixed'; this.setState(st => ({ [k]: st[k].filter(x => x.id !== ed.id), ed: null })); },
+
+      pgTotal: f(pgTotal), saveMonth: f(saveMonth), quotaTot: this.fq(quotaTot),
+      pgRows: pgs.map(p => ({ ...p, open: () => this.setState({ pgId: p.id, pgMode: null, pgAmt: '' }) })),
+      newPg: () => this.setState({ pe: { id: null, name: '', goal: '', date: '', quota: '' } }),
+      pgOpen: !!pg, pg: pg || {},
+      pgClose: () => this.setState({ pgId: null, pgMode: null }),
+      pgEditOpen: () => pg && this.setState({ pe: { id: pg.id, name: pg.name, goal: String(pg.goal), date: `${String(pg.tm).padStart(2, '0')}/${pg.ty}`, quota: String(pg.quota) } }),
+      pgModeIn: () => this.setState(st => ({ pgMode: st.pgMode === 'in' ? null : 'in', pgAmt: '' })),
+      pgModeOut: () => this.setState(st => ({ pgMode: st.pgMode === 'out' ? null : 'out', pgAmt: '' })),
+      pgInBg: s.pgMode === 'in' ? 'var(--color-accent-100)' : 'transparent', pgOutBg: s.pgMode === 'out' ? 'var(--color-accent-100)' : 'transparent',
+      pgModeOn: !!s.pgMode, pgModeLabel: s.pgMode === 'out' ? 'Importo da prelevare (€)' : 'Importo da versare (€)',
+      pgModeHint: s.pgMode === 'out' ? `Torna nello spendibile di questo mese. Disponibile € ${pg ? pg.savedF : ''}` : 'Viene tolto subito dallo spendibile di questo mese.',
+      pgAmt: s.pgAmt, pgSetAmt: e => this.setState({ pgAmt: dec(e.target.value) }), pgAmtInvalid,
+      pgConfirm: () => {
+        if (pgAmtInvalid || !pg) return;
+        const amt = s.pgMode === 'out' ? -pgAmtN : pgAmtN;
+        const entry = { id: this.uid(), date: `${T} ott`, label: s.pgMode === 'out' ? 'Prelievo' : 'Versamento', amt, cur: true };
+        this.setState(st => ({ piggies: st.piggies.map(p => p.id === pg.id ? { ...p, hist: [...(p.hist || []), entry] } : p), pgMode: null, pgAmt: '' }));
+      },
+      peOpen: !!pe, peTitle: pe && pe.id ? 'Modifica salvadanaio' : 'Nuovo salvadanaio',
+      peName: pe ? pe.name : '', peGoal: pe ? pe.goal : '', peDate: pe ? pe.date : '', peQuota: pe ? pe.quota : '',
+      peSetName: e => { const v = e.target.value; this.setState(st => ({ pe: { ...st.pe, name: v } })); },
+      peSetGoal: e => { const v = dec(e.target.value); this.setState(st => ({ pe: { ...st.pe, goal: v } })); },
+      peSetDate: e => { const v = e.target.value.replace(/[^\d/]/g, '').slice(0, 7); this.setState(st => ({ pe: { ...st.pe, date: v } })); },
+      peSetQuota: e => { const v = dec(e.target.value); this.setState(st => ({ pe: { ...st.pe, quota: v } })); },
+      peHint: 'La quota viene tolta in automatico dallo spendibile ogni mese.',
+      peInvalid, peCanDelete: !!(pe && pe.id),
+      peClose: () => this.setState({ pe: null }),
+      peSave: () => {
+        if (peInvalid) return;
+        const q = this.num(pe.quota) || 0, item = { name: pe.name.trim(), goal: this.num(pe.goal), tm: +peM[1], ty: +peM[2], quota: q };
+        this.setState(st => pe.id
+          ? { piggies: st.piggies.map(p => p.id === pe.id ? { ...p, ...item, base: p.base + q - p.quota } : p), pe: null }
+          : { piggies: [...st.piggies, { id: this.uid(), ...item, base: q, hist: [] }], pe: null });
+      },
+      peDelete: () => this.setState(st => ({ piggies: st.piggies.filter(p => p.id !== pe.id), pe: null, pgId: null })),
+
+      pfValue: f(pf.value), pfCost: f(pf.cost), pfGain: this.sg(pfGain), pfGainPct: this.pc(pf.cost ? pfGain / pf.cost * 100 : 0), pfGainColor: this.gc(pfGain),
+      pfTax: f(pf.tax), pfDiv: f(pf.divNet), pfNet: f(pf.value - pf.tax),
+      holdRows: H.sort((a, b2) => b2.value - a.value).map(h => ({ sym: h.c.sym, name: h.c.name, sub: `${this.fq(h.qty)} quote · PMC ${this.fo(h.c, h.avgO)}`, valueF: f(h.value), gainPctF: this.pc(h.gainPct), color: this.gc(h.gain), open: openAsset(h.c.sym) })),
+      hasPacs: s.pacs.length > 0,
+      pacRows: s.pacs.map(p => ({ ...p, label: `${p.sym} · ${(BYSYM[p.sym] || {}).name || ''}`, amtF: f(p.amt), remove: () => this.setState(st => ({ pacs: st.pacs.filter(x => x.id !== p.id) })) })),
+      openSearch: () => this.setState({ srch: true, q: '', qType: 'Tutti', prefill: null }),
+      srchOpen: s.srch, srchQ: s.q, srchSetQ: e => this.setState({ q: e.target.value }),
+      srchClose: () => this.setState({ srch: false, prefill: null }),
+      hasPrefill: !!s.prefill, prefillF: s.prefill ? f(s.prefill) : '',
+      typeChips, results, noResults: results.length === 0,
+      asOpen: !!ac, as: asV, pos: posV,
+      asClose: () => this.setState({ asSym: null }),
+      buyOpen: () => ac && this.setState(st => ({ buy: st.prefill ? { mode: 'amt', qty: '', price: String(ac.price).replace('.', ','), amt: String(st.prefill).replace('.', ','), fee: '', pac: false, pacDay: String(T) } : { mode: 'qty', qty: '', price: String(ac.price).replace('.', ','), amt: '', fee: '', pac: false, pacDay: String(T) } })),
+      buyOn: !!(b && ac), buyClose: () => this.setState({ buy: null }),
+      buyModeQty: () => this.setState(st => ({ buy: { ...st.buy, mode: 'qty' } })), buyModeAmt: () => this.setState(st => ({ buy: { ...st.buy, mode: 'amt' } })),
+      bmIsQty: !!bmOn('qty'), bmIsAmt: !!bmOn('amt'),
+      bmQtyBg: bmOn('qty') ? 'var(--color-accent)' : 'transparent', bmQtyColor: bmOn('qty') ? 'var(--color-bg)' : 'var(--color-text)',
+      bmAmtBg: bmOn('amt') ? 'var(--color-accent)' : 'transparent', bmAmtColor: bmOn('amt') ? 'var(--color-bg)' : 'var(--color-text)',
+      bQty: b ? b.qty : '', bPrice: b ? b.price : '', bAmt: b ? b.amt : '', bFee: b ? b.fee : '', bPacDay: b ? b.pacDay : '', bPac: !!(b && b.pac),
+      bCurSym: ac && ac.cur === 'USD' ? '$' : '€',
+      bSetQty: setB('qty', dec), bSetPrice: setB('price', dec), bSetAmt: setB('amt', dec), bSetFee: setB('fee', dec), bSetPacDay: setB('pacDay', v => v.replace(/\D/g, '').slice(0, 2)),
+      bTogglePac: () => this.setState(st => ({ buy: { ...st.buy, pac: !st.buy.pac } })),
+      pacTrack: pt.track, pacKnob: pt.knob, pacKnobBg: pt.bg,
+      bQtyLine: `${this.fq(bv.qty || 0)} quote`, bTotF: f(bv.tot || 0),
+      bNote: b && b.pac ? `Poi € ${f(bv.tot || 0)} ogni mese il giorno ${bv.pacDay || '…'}, conteggiati nelle spese fisse.` : 'Tolto dallo spendibile di questo mese.',
+      bInvalid: !!bv.invalid,
+      buyConfirm: () => {
+        if (bv.invalid || !ac) return;
+        const lotId = this.uid();
+        const lot = { id: lotId, sym: ac.sym, qty: bv.qty, price: bv.price, fee: bv.fee, date: `${T} ott 2026` };
+        this.setState(st => {
+          const next = { lots: [...st.lots, lot], buy: null, srch: false, prefill: null, asSym: ac.sym, tab: 'fix', fsTab: 'inv' };
+          if (b.pac) next.pacs = [...st.pacs.filter(p => p.sym !== ac.sym), { id: this.uid(), sym: ac.sym, amt: Math.round(bv.tot * 100) / 100, day: bv.pacDay }];
+          else next.tx = [...st.tx, { id: this.uid(), name: `${ac.sym} · ${this.fq(bv.qty)} quote`, cat: 'Investimento', amt: -Math.round(bv.tot * 100) / 100, day: T, lotId }];
+          return next;
+        });
+      },
+
+      payday: P, payDec: () => this.setState(st => ({ payday: clamp(st.payday - 1, 1, 28) })), payInc: () => this.setState(st => ({ payday: clamp(st.payday + 1, 1, 28) })),
+      alertLabel: s.alert ? `€ ${s.alert}` : 'No', alertHint: s.alert ? 'Mostra un avviso in home' : 'Nessun avviso',
+      alDec: () => this.setState(st => ({ alert: clamp(st.alert - 5, 0, 200) })), alInc: () => this.setState(st => ({ alert: clamp(st.alert + 5, 0, 200) })),
+      toggleExtra: () => this.setState(st => ({ extra: !st.extra })), extraTrack: ex.track, extraKnob: ex.knob, extraKnobBg: ex.bg,
+      togglePerDay: () => this.setState(st => ({ perDay: !st.perDay })), pdTrack: pd.track, pdKnob: pd.knob, pdKnobBg: pd.bg,
+      resetData: () => this.setState({ ...SEED(), openTx: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
