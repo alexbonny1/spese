@@ -24,7 +24,7 @@ export interface Holding {
   divNet: number;
 }
 
-function toEur(c: Security, v: number): number {
+export function toEur(c: Security, v: number): number {
   return c.cur === 'USD' ? v / USD_EUR_RATE : v;
 }
 

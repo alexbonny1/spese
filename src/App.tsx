@@ -3,6 +3,7 @@ import { AddMovementSheet, type MovementType, type SavedMovement } from './compo
 import { TabBar } from './components/TabBar';
 import { uid } from './lib/id';
 import type { FixTabId, TabId } from './lib/nav';
+import { AssetDetailScreen } from './screens/AssetDetailScreen';
 import { FixedScreen } from './screens/FixedScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { MovementsScreen } from './screens/MovementsScreen';
@@ -16,6 +17,7 @@ function Shell() {
   const [fsTab, setFsTab] = useState<FixTabId>('spese');
   const [sheet, setSheet] = useState<MovementType | null>(null);
   const [search, setSearch] = useState<{ prefill: number | null } | null>(null);
+  const [assetSym, setAssetSym] = useState<string | null>(null);
   const { setData } = useAppState();
 
   const goTab = (t: TabId, fs?: FixTabId) => {
@@ -48,7 +50,12 @@ function Shell() {
         {tab === 'home' && <HomeScreen onNavigate={goTab} onOpenSheet={setSheet} />}
         {tab === 'mov' && <MovementsScreen onAdd={() => setSheet('out')} />}
         {tab === 'fix' && (
-          <FixedScreen fsTab={fsTab} onFsTabChange={setFsTab} onSearch={() => setSearch({ prefill: null })} />
+          <FixedScreen
+            fsTab={fsTab}
+            onFsTabChange={setFsTab}
+            onSearch={() => setSearch({ prefill: null })}
+            onOpenAsset={setAssetSym}
+          />
         )}
         {tab === 'set' && <PlaceholderScreen title="Impostazioni" />}
       </div>
@@ -60,10 +67,11 @@ function Shell() {
         <SearchScreen
           prefill={search.prefill}
           onBack={() => setSearch(null)}
-          onOpenAsset={() => {
-            // Il dettaglio titolo non è ancora implementato.
-          }}
+          onOpenAsset={(sym) => setAssetSym(sym)}
         />
+      )}
+      {assetSym && (
+        <AssetDetailScreen sym={assetSym} onBack={() => setAssetSym(null)} onBuy={() => {}} />
       )}
     </div>
   );

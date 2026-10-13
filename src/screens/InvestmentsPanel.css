@@ -50,11 +50,18 @@
 }
 
 .inv-hold-row {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 10px 0;
   border-bottom: 1px solid var(--color-divider);
+}
+.inv-hold-row:hover {
+  background: var(--color-accent-100);
 }
 .inv-hold-ticker {
   width: 52px;

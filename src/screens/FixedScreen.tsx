@@ -19,9 +19,10 @@ interface FixedScreenProps {
   fsTab: FixTabId;
   onFsTabChange: (t: FixTabId) => void;
   onSearch: () => void;
+  onOpenAsset: (sym: string) => void;
 }
 
-export function FixedScreen({ fsTab, onFsTabChange, onSearch }: FixedScreenProps) {
+export function FixedScreen({ fsTab, onFsTabChange, onSearch, onOpenAsset }: FixedScreenProps) {
   const { data, setData } = useAppState();
   const [edit, setEdit] = useState<FixedEditDraft | null>(null);
 
@@ -145,7 +146,7 @@ export function FixedScreen({ fsTab, onFsTabChange, onSearch }: FixedScreenProps
 
       {fsTab === 'risp' && <RisparmiPanel />}
 
-      {fsTab === 'inv' && <InvestmentsPanel onSearch={onSearch} />}
+      {fsTab === 'inv' && <InvestmentsPanel onSearch={onSearch} onOpenAsset={onOpenAsset} />}
 
       {edit && <FixedEditSheet draft={edit} onSave={saveEdit} onDelete={deleteEdit} onClose={() => setEdit(null)} />}
     </div>

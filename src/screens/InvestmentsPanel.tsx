@@ -8,9 +8,10 @@ import './InvestmentsPanel.css';
 
 interface InvestmentsPanelProps {
   onSearch: () => void;
+  onOpenAsset: (sym: string) => void;
 }
 
-export function InvestmentsPanel({ onSearch }: InvestmentsPanelProps) {
+export function InvestmentsPanel({ onSearch, onOpenAsset }: InvestmentsPanelProps) {
   const { data, setData } = useAppState();
   const v = useMemo(() => computeInvestments(data), [data]);
 
@@ -54,7 +55,7 @@ export function InvestmentsPanel({ onSearch }: InvestmentsPanelProps) {
         <div className="inv-section">
           <h5>Titoli</h5>
           {v.holdRows.map((h) => (
-            <div key={h.sym} className="inv-hold-row">
+            <button key={h.sym} type="button" className="inv-hold-row" onClick={() => onOpenAsset(h.sym)}>
               <div className="inv-hold-ticker">{h.sym}</div>
               <div className="inv-hold-text">
                 <span className="inv-hold-name">{h.name}</span>
@@ -66,7 +67,7 @@ export function InvestmentsPanel({ onSearch }: InvestmentsPanelProps) {
                   {h.gainPctF}
                 </span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
