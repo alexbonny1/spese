@@ -1,5 +1,5 @@
 import type { Lot, Piggy, Security } from './types';
-import { fmt } from './format';
+import { fmt, fq, MESI } from './format';
 
 export const USD_EUR_RATE = 1.08;
 
@@ -65,17 +65,35 @@ export function computeHoldings(lots: Lot[], catalogBySym: Record<string, Securi
   });
 }
 
+export interface PiggyHistRow {
+  id: string;
+  date: string;
+  label: string;
+  amtF: string;
+  color: string;
+}
+
 export interface PiggyCalc {
   piggy: Piggy;
   /** totale versato manualmente questo mese (versamenti − prelievi) */
   manual: number;
   /** saldo attuale del salvadanaio */
   saved: number;
+  savedF: string;
+  goalF: string;
+  quotaF: string;
   left: number;
+  leftF: string;
   need: number;
+  needF: string;
+  dateF: string;
   pct: number;
+  pctF: string;
+  /** larghezza barra, es. "42%" */
+  w: string;
   hint: string;
   hintColor: string;
+  hist: PiggyHistRow[];
 }
 
 /** curMonth: 1-12. Replica `pgCalc` del prototipo, generalizzata al mese/anno correnti reali. */
@@ -102,6 +120,23 @@ export function computePiggy(p: Piggy, curMonth: number, curYear: number): Piggy
     hintColor = 'var(--color-accent-800)';
   }
 
+  const cur = (p.hist ?? []).filter((e) => e.cur).slice().reverse();
+  const past = (p.hist ?? []).filter((e) => !e.cur);
+  const hist: PiggyHistRow[] = [...cur, { id: 'q', date: `1 ${MESI[curMonth - 1]}`, label: 'Quota mensile', amt: p.quota }, ...past]
+    .filter((e) => e.amt !== 0)
+    .map((e) => ({
+      id: e.id,
+      date: e.date,
+      label: e.label,
+      amtF: (e.amt >= 0 ? '+ ' : '− ') + fmt(e.amt),
+      color: e.amt >= 0 ? 'var(--color-accent-700)' : 'var(--color-text)',
+    }));
+
   const pct = p.goal ? Math.min(100, (saved / p.goal) * 100) : 0;
-  return { piggy: p, manual, saved, left, need, pct, hint, hintColor };
+  return {
+    piggy: p, manual, saved, savedF: fmt(saved), goalF: fq(p.goal), quotaF: fq(p.quota),
+    left, leftF: fmt(left), need, needF: left <= 0 ? '—' : `€ ${fmt(need)}`,
+    dateF: `${MESI[p.tm - 1]} ${p.ty}`, pct, pctF: Math.round(pct) + '%', w: pct + '%',
+    hint, hintColor, hist,
+  };
 }

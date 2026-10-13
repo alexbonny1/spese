@@ -1,0 +1,89 @@
+.risp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--color-divider);
+  border-left: 1px solid var(--color-divider);
+}
+.risp-cell {
+  padding: 10px 12px;
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+.risp-kicker {
+  color: var(--color-accent-700) !important;
+}
+.risp-value {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 22px;
+}
+
+.risp-card {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-divider);
+}
+.risp-card:hover {
+  background: var(--color-accent-100);
+}
+
+.risp-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.risp-card-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 18px;
+}
+.risp-card-pct {
+  font-size: 12px;
+  color: var(--color-neutral-700);
+}
+
+.risp-card-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.risp-card-saved {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1;
+}
+.risp-card-goal {
+  font-size: 13px;
+  color: var(--color-neutral-700);
+}
+
+.risp-card-bar {
+  height: 6px;
+  background: var(--color-accent-200);
+}
+.risp-card-bar-fill {
+  height: 100%;
+  background: var(--color-accent-700);
+  transition: width 0.4s;
+}
+
+.risp-card-quota {
+  font-size: 12px;
+  color: var(--color-neutral-800);
+}
+.risp-card-hint {
+  font-size: 11px;
+}
+
+.risp-new-btn {
+  height: 44px;
+  font-size: 15px;
+}

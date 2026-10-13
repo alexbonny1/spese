@@ -1,0 +1,7 @@
+.fullscreen-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,146 @@
+.piggy-detail-top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 0;
+}
+.piggy-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.piggy-detail-body {
+  flex: 1;
+  overflow: auto;
+  padding: 8px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.piggy-detail-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.piggy-detail-head h3 {
+  margin: 0;
+}
+.piggy-detail-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.piggy-detail-saved {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.piggy-detail-goal {
+  font-size: 14px;
+  color: var(--color-neutral-700);
+}
+
+.piggy-detail-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.piggy-detail-bar {
+  height: 14px;
+  padding: 2px;
+}
+.piggy-detail-bar-fill {
+  height: 100%;
+  background: var(--color-accent-700);
+  transition: width 0.4s;
+}
+.piggy-detail-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-neutral-800);
+}
+
+.piggy-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--color-divider);
+  border-left: 1px solid var(--color-divider);
+}
+.piggy-detail-cell {
+  padding: 10px 12px;
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+.piggy-detail-kicker {
+  color: var(--color-accent-700) !important;
+}
+.piggy-detail-cell-value {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.piggy-detail-hint {
+  font-size: 12px;
+}
+
+.piggy-detail-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.piggy-action-btn {
+  height: 44px;
+  font-size: 15px;
+}
+
+.piggy-detail-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.piggy-detail-mode-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.piggy-detail-mode-row .field {
+  flex: 1;
+}
+.piggy-confirm-btn {
+  height: 40px;
+  font-size: 15px;
+}
+
+.piggy-detail-hist h5 {
+  margin: 6px 0 2px;
+}
+.piggy-hist-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+.piggy-hist-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.piggy-hist-label {
+  font-size: 14px;
+}
+.piggy-hist-date {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}
+.piggy-hist-amt {
+  font-size: 14px;
+  font-weight: 500;
+}

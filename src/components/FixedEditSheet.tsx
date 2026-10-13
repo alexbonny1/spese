@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Blueprint } from './Blueprint';
 import { SheetOverlay } from './SheetOverlay';
-import './FixedEditSheet.css';
 
 export interface FixedEditDraft {
   kind: 'inc' | 'fix';
@@ -41,7 +40,7 @@ export function FixedEditSheet({ draft, onSave, onDelete, onClose }: FixedEditSh
 
   return (
     <SheetOverlay onClose={onClose}>
-      <div className="fixed-edit-top">
+      <div className="sheet-form-top">
         <h4>{title}</h4>
         <button type="button" className="btn btn-ghost" onClick={onClose}>
           Annulla
@@ -53,7 +52,7 @@ export function FixedEditSheet({ draft, onSave, onDelete, onClose }: FixedEditSh
         <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Es. Affitto" />
       </div>
 
-      <div className="fixed-edit-row">
+      <div className="sheet-form-row">
         <div className="field">
           <label>Importo (€)</label>
           <input
@@ -76,12 +75,12 @@ export function FixedEditSheet({ draft, onSave, onDelete, onClose }: FixedEditSh
         </div>
       </div>
 
-      <Blueprint as="button" type="button" className="btn btn-primary fixed-edit-save" disabled={invalid} onClick={save}>
+      <Blueprint as="button" type="button" className="btn btn-primary sheet-form-save" disabled={invalid} onClick={save}>
         Salva
       </Blueprint>
 
       {draft.id && (
-        <button type="button" className="btn btn-secondary fixed-edit-delete" onClick={onDelete}>
+        <button type="button" className="btn btn-secondary sheet-form-delete" onClick={onDelete}>
           Elimina
         </button>
       )}

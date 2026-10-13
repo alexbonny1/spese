@@ -29,3 +29,37 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+/* — layout generico per sheet "form" (titolo+Annulla, campi in coppia, Salva/Elimina) — */
+.sheet-form-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sheet-form-top h4 {
+  margin: 0;
+}
+
+.sheet-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sheet-form-save {
+  height: 48px;
+  font-size: 17px;
+  width: 100%;
+}
+
+.sheet-form-delete {
+  height: 44px;
+  font-size: 15px;
+  width: 100%;
+  color: var(--color-accent-800);
+}
+
+.sheet-form-hint {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}

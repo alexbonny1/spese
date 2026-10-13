@@ -6,6 +6,7 @@ import { uid } from '../lib/id';
 import type { FixTabId } from '../lib/nav';
 import { useAppState } from '../state/AppStateContext';
 import './FixedScreen.css';
+import { RisparmiPanel } from './RisparmiPanel';
 
 const SUB_TABS: { id: FixTabId; label: string }[] = [
   { id: 'spese', label: 'Spese fisse' },
@@ -140,11 +141,7 @@ export function FixedScreen({ fsTab, onFsTabChange }: FixedScreenProps) {
         </div>
       )}
 
-      {fsTab === 'risp' && (
-        <div className="fixed-body">
-          <p className="fixed-placeholder">Questa sezione è in costruzione.</p>
-        </div>
-      )}
+      {fsTab === 'risp' && <RisparmiPanel />}
 
       {fsTab === 'inv' && (
         <div className="fixed-body">
