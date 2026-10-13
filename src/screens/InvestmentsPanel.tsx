@@ -6,7 +6,11 @@ import { useAppState } from '../state/AppStateContext';
 import './FixedScreen.css';
 import './InvestmentsPanel.css';
 
-export function InvestmentsPanel() {
+interface InvestmentsPanelProps {
+  onSearch: () => void;
+}
+
+export function InvestmentsPanel({ onSearch }: InvestmentsPanelProps) {
   const { data, setData } = useAppState();
   const v = useMemo(() => computeInvestments(data), [data]);
 
@@ -86,7 +90,7 @@ export function InvestmentsPanel() {
       </div>
 
       <div className="inv-footer">
-        <Blueprint as="button" type="button" className="btn btn-primary inv-search-btn" disabled>
+        <Blueprint as="button" type="button" className="btn btn-primary inv-search-btn" onClick={onSearch}>
           <Search size={18} strokeWidth={1.5} />
           Cerca e compra
         </Blueprint>

@@ -7,6 +7,7 @@ import { FixedScreen } from './screens/FixedScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { MovementsScreen } from './screens/MovementsScreen';
 import { PlaceholderScreen } from './screens/PlaceholderScreen';
+import { SearchScreen } from './screens/SearchScreen';
 import { AppStateProvider, useAppState } from './state/AppStateContext';
 import './App.css';
 
@@ -14,6 +15,7 @@ function Shell() {
   const [tab, setTab] = useState<TabId>('home');
   const [fsTab, setFsTab] = useState<FixTabId>('spese');
   const [sheet, setSheet] = useState<MovementType | null>(null);
+  const [search, setSearch] = useState<{ prefill: number | null } | null>(null);
   const { setData } = useAppState();
 
   const goTab = (t: TabId, fs?: FixTabId) => {
@@ -23,8 +25,8 @@ function Shell() {
 
   const saveMovement = ({ type, amt, cat, rec }: SavedMovement) => {
     if (type === 'out' && cat === 'Investimento') {
-      // La ricerca titoli non è ancora implementata: per ora lo sheet si chiude soltanto.
       setSheet(null);
+      setSearch({ prefill: amt });
       return;
     }
     const today = new Date().getDate();
@@ -45,12 +47,23 @@ function Shell() {
       <div className="app-content">
         {tab === 'home' && <HomeScreen onNavigate={goTab} onOpenSheet={setSheet} />}
         {tab === 'mov' && <MovementsScreen onAdd={() => setSheet('out')} />}
-        {tab === 'fix' && <FixedScreen fsTab={fsTab} onFsTabChange={setFsTab} />}
+        {tab === 'fix' && (
+          <FixedScreen fsTab={fsTab} onFsTabChange={setFsTab} onSearch={() => setSearch({ prefill: null })} />
+        )}
         {tab === 'set' && <PlaceholderScreen title="Impostazioni" />}
       </div>
       <TabBar active={tab} onChange={(t) => goTab(t)} />
       {sheet && (
         <AddMovementSheet initialType={sheet} onSave={saveMovement} onClose={() => setSheet(null)} />
+      )}
+      {search && (
+        <SearchScreen
+          prefill={search.prefill}
+          onBack={() => setSearch(null)}
+          onOpenAsset={() => {
+            // Il dettaglio titolo non è ancora implementato.
+          }}
+        />
       )}
     </div>
   );

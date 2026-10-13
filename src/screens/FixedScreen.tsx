@@ -18,9 +18,10 @@ const SUB_TABS: { id: FixTabId; label: string }[] = [
 interface FixedScreenProps {
   fsTab: FixTabId;
   onFsTabChange: (t: FixTabId) => void;
+  onSearch: () => void;
 }
 
-export function FixedScreen({ fsTab, onFsTabChange }: FixedScreenProps) {
+export function FixedScreen({ fsTab, onFsTabChange, onSearch }: FixedScreenProps) {
   const { data, setData } = useAppState();
   const [edit, setEdit] = useState<FixedEditDraft | null>(null);
 
@@ -144,7 +145,7 @@ export function FixedScreen({ fsTab, onFsTabChange }: FixedScreenProps) {
 
       {fsTab === 'risp' && <RisparmiPanel />}
 
-      {fsTab === 'inv' && <InvestmentsPanel />}
+      {fsTab === 'inv' && <InvestmentsPanel onSearch={onSearch} />}
 
       {edit && <FixedEditSheet draft={edit} onSave={saveEdit} onDelete={deleteEdit} onClose={() => setEdit(null)} />}
     </div>
