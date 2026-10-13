@@ -1,10 +1,12 @@
 .app-shell {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100dvh;
   max-width: 480px;
   margin: 0 auto;
   background: var(--color-bg);
+  overflow: hidden;
 }
 
 .app-content {

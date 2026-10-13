@@ -14,9 +14,10 @@ const LEGEND = [
 
 interface HomeScreenProps {
   onNavigate: (tab: TabId, fsTab?: FixTabId) => void;
+  onOpenSheet: (type: 'in' | 'out') => void;
 }
 
-export function HomeScreen({ onNavigate }: HomeScreenProps) {
+export function HomeScreen({ onNavigate, onOpenSheet }: HomeScreenProps) {
   const { data } = useAppState();
   const v = useMemo(() => computeHome(data, new Date()), [data]);
 
@@ -106,10 +107,10 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
       </div>
 
       <div className="home-footer">
-        <Blueprint as="button" type="button" className="btn btn-secondary home-footer-btn">
+        <Blueprint as="button" type="button" className="btn btn-secondary home-footer-btn" onClick={() => onOpenSheet('in')}>
           + Entrata
         </Blueprint>
-        <Blueprint as="button" type="button" className="btn btn-primary home-footer-btn">
+        <Blueprint as="button" type="button" className="btn btn-primary home-footer-btn" onClick={() => onOpenSheet('out')}>
           − Uscita
         </Blueprint>
       </div>
