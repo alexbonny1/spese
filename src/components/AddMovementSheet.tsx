@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Blueprint } from './Blueprint';
+import { SheetOverlay } from './SheetOverlay';
 import './AddMovementSheet.css';
 
 export type MovementType = 'in' | 'out';
@@ -67,9 +68,7 @@ export function AddMovementSheet({ initialType, onSave, onClose }: AddMovementSh
   };
 
   return (
-    <div className="add-sheet-overlay">
-      <div className="add-sheet-backdrop" onClick={onClose} />
-      <div className="add-sheet">
+    <SheetOverlay onClose={onClose}>
         <div className="add-sheet-top">
           <div className="add-sheet-seg">
             <button
@@ -148,7 +147,6 @@ export function AddMovementSheet({ initialType, onSave, onClose }: AddMovementSh
         <Blueprint as="button" type="button" className="btn btn-primary add-sheet-save" disabled={cantSave} onClick={save}>
           {saveLabel}
         </Blueprint>
-      </div>
-    </div>
+    </SheetOverlay>
   );
 }

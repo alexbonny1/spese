@@ -1,0 +1,27 @@
+.fixed-edit-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.fixed-edit-top h4 {
+  margin: 0;
+}
+
+.fixed-edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fixed-edit-save {
+  height: 48px;
+  font-size: 17px;
+  width: 100%;
+}
+
+.fixed-edit-delete {
+  height: 44px;
+  font-size: 15px;
+  width: 100%;
+  color: var(--color-accent-800);
+}

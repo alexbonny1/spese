@@ -3,6 +3,7 @@ import { AddMovementSheet, type MovementType, type SavedMovement } from './compo
 import { TabBar } from './components/TabBar';
 import { uid } from './lib/id';
 import type { FixTabId, TabId } from './lib/nav';
+import { FixedScreen } from './screens/FixedScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { MovementsScreen } from './screens/MovementsScreen';
 import { PlaceholderScreen } from './screens/PlaceholderScreen';
@@ -11,7 +12,7 @@ import './App.css';
 
 function Shell() {
   const [tab, setTab] = useState<TabId>('home');
-  const [, setFsTab] = useState<FixTabId>('spese');
+  const [fsTab, setFsTab] = useState<FixTabId>('spese');
   const [sheet, setSheet] = useState<MovementType | null>(null);
   const { setData } = useAppState();
 
@@ -44,7 +45,7 @@ function Shell() {
       <div className="app-content">
         {tab === 'home' && <HomeScreen onNavigate={goTab} onOpenSheet={setSheet} />}
         {tab === 'mov' && <MovementsScreen onAdd={() => setSheet('out')} />}
-        {tab === 'fix' && <PlaceholderScreen title="Fisse" />}
+        {tab === 'fix' && <FixedScreen fsTab={fsTab} onFsTabChange={setFsTab} />}
         {tab === 'set' && <PlaceholderScreen title="Impostazioni" />}
       </div>
       <TabBar active={tab} onChange={(t) => goTab(t)} />

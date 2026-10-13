@@ -1,35 +1,3 @@
-.add-sheet-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.add-sheet-backdrop {
-  position: absolute;
-  inset: 0;
-  background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent);
-}
-
-.add-sheet {
-  position: relative;
-  background: var(--color-bg);
-  border-top: 1px solid var(--color-divider);
-  padding: 16px 18px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  box-shadow: var(--shadow-lg);
-  animation: add-sheet-slide-up 0.28s ease-out;
-}
-
-@keyframes add-sheet-slide-up {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
 .add-sheet-top {
   display: flex;
   align-items: center;
