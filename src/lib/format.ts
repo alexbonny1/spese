@@ -3,6 +3,7 @@ export const MESI_FULL = [
   'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
   'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre',
 ];
+export const MESI_FULL_LOWER = MESI_FULL.map((m) => m.toLowerCase());
 
 /** "1.234,56" — punto per le migliaia, virgola per i decimali. */
 export function fmt(n: number): string {

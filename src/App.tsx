@@ -4,6 +4,7 @@ import { TabBar } from './components/TabBar';
 import { uid } from './lib/id';
 import type { FixTabId, TabId } from './lib/nav';
 import { HomeScreen } from './screens/HomeScreen';
+import { MovementsScreen } from './screens/MovementsScreen';
 import { PlaceholderScreen } from './screens/PlaceholderScreen';
 import { AppStateProvider, useAppState } from './state/AppStateContext';
 import './App.css';
@@ -42,7 +43,7 @@ function Shell() {
     <div className="app-shell">
       <div className="app-content">
         {tab === 'home' && <HomeScreen onNavigate={goTab} onOpenSheet={setSheet} />}
-        {tab === 'mov' && <PlaceholderScreen title="Movimenti" />}
+        {tab === 'mov' && <MovementsScreen onAdd={() => setSheet('out')} />}
         {tab === 'fix' && <PlaceholderScreen title="Fisse" />}
         {tab === 'set' && <PlaceholderScreen title="Impostazioni" />}
       </div>
