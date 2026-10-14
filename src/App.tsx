@@ -112,9 +112,9 @@ function Shell() {
       {assetSym && (
         <AssetDetailScreen sym={assetSym} onBack={() => setAssetSym(null)} onBuy={() => setBuySym(assetSym)} />
       )}
-      {buySym && liveCatalogBySym()[buySym] && (
+      {buySym && liveCatalogBySym(data.manualPrices)[buySym] && (
         <BuySheet
-          security={liveCatalogBySym()[buySym]}
+          security={liveCatalogBySym(data.manualPrices)[buySym]}
           prefillAmount={search?.prefill ?? null}
           today={new Date().getDate()}
           onConfirm={(result) => confirmBuy(buySym, result)}

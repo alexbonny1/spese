@@ -40,7 +40,7 @@ export interface HomeVals {
 export function computeHome(
   data: AppData,
   today: Date,
-  catalogBySym: Record<string, Security> = liveCatalogBySym(),
+  catalogBySym: Record<string, Security> = liveCatalogBySym(data.manualPrices),
 ): HomeVals {
   const period = getPeriod(today, data.payday);
   const todayDay = today.getDate();

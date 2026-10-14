@@ -1,5 +1,5 @@
 import { ChevronLeft } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Blueprint } from '../components/Blueprint';
 import { FullScreenOverlay } from '../components/FullScreenOverlay';
 import { computeAssetDetail } from '../lib/assetDetail';
@@ -13,12 +13,44 @@ interface AssetDetailScreenProps {
   onBuy: () => void;
 }
 
+function cleanDecimal(v: string): string {
+  return v.replace(/[^\d,.]/g, '');
+}
+
 export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps) {
-  const { data } = useAppState();
+  const { data, setData } = useAppState();
   const marketTick = useMarketTick([sym], { withYield: true });
   const asset = useMemo(() => computeAssetDetail(data, sym), [data, sym, marketTick]);
+  const [editingPrice, setEditingPrice] = useState(false);
+  const [priceInput, setPriceInput] = useState('');
 
   if (!asset) return null;
+
+  const saveManualPrice = () => {
+    const n = parseFloat(priceInput.replace(',', '.'));
+    if (!(n > 0)) return;
+    setData((prev) => ({ ...prev, manualPrices: { ...prev.manualPrices, [sym]: n } }));
+    setEditingPrice(false);
+  };
+
+  const manualPriceForm = (
+    <div className="asset-manual-form">
+      <div className="field">
+        <label>Prezzo attuale (€)</label>
+        <input
+          className="input"
+          inputMode="decimal"
+          autoFocus
+          value={priceInput}
+          onChange={(e) => setPriceInput(cleanDecimal(e.target.value))}
+          placeholder="0,00"
+        />
+      </div>
+      <Blueprint as="button" type="button" className="btn btn-primary asset-manual-save" onClick={saveManualPrice}>
+        Salva prezzo
+      </Blueprint>
+    </div>
+  );
 
   if (!asset.ready) {
     return (
@@ -29,11 +61,25 @@ export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps
             Indietro
           </button>
         </div>
-        <div className="asset-loading">
-          {asset.errored
-            ? 'Impossibile recuperare i dati di mercato in questo momento. Riprova più tardi.'
-            : 'Caricamento dati di mercato…'}
-        </div>
+        {asset.isManual ? (
+          <div className="asset-manual-setup">
+            <span className="asset-meta">
+              {asset.sym} · {asset.type} · {asset.ex}
+            </span>
+            <h3>{asset.name}</h3>
+            <p className="asset-manual-hint">
+              Nessun dato di mercato gratuito disponibile per questo titolo: imposta tu il prezzo attuale, potrai
+              aggiornarlo in qualsiasi momento.
+            </p>
+            {manualPriceForm}
+          </div>
+        ) : (
+          <div className="asset-loading">
+            {asset.errored
+              ? 'Impossibile recuperare i dati di mercato in questo momento. Riprova più tardi.'
+              : 'Caricamento dati di mercato…'}
+          </div>
+        )}
       </FullScreenOverlay>
     );
   }
@@ -55,35 +101,54 @@ export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps
           <h3>{asset.name}</h3>
           <div className="asset-price-row">
             <span className="asset-price">{asset.priceF}</span>
-            <span className="asset-r1y" style={{ color: asset.color }}>
-              {asset.r1yF} in 1 anno
-            </span>
+            {!asset.isManual && (
+              <span className="asset-r1y" style={{ color: asset.color }}>
+                {asset.r1yF} in 1 anno
+              </span>
+            )}
           </div>
           {asset.isUsd && <span className="asset-eur-approx">≈ € {asset.priceEurF} al cambio 1,08</span>}
+          {asset.isManual &&
+            (editingPrice ? (
+              manualPriceForm
+            ) : (
+              <button
+                type="button"
+                className="btn btn-ghost asset-manual-edit"
+                onClick={() => {
+                  setPriceInput(String(asset.priceF.replace(/[^\d,]/g, '')));
+                  setEditingPrice(true);
+                }}
+              >
+                Modifica prezzo
+              </button>
+            ))}
         </div>
 
-        <Blueprint className="asset-chart">
-          <svg viewBox="0 0 320 120" preserveAspectRatio="none" className="asset-chart-svg">
-            <line x1="0" y1="8" x2="320" y2="8" stroke="var(--color-divider)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
-            <line x1="0" y1="60" x2="320" y2="60" stroke="var(--color-divider)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
-            <line x1="0" y1="112" x2="320" y2="112" stroke="var(--color-divider)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
-            <polygon points={asset.chartArea} fill="var(--color-accent-100)" />
-            <polyline
-              points={asset.chartPts}
-              fill="none"
-              stroke="var(--color-accent-700)"
-              strokeWidth={1.5}
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-          <div className="asset-chart-foot">
-            <span>{asset.chartStartF}</span>
-            <span>
-              min {asset.minF} · max {asset.maxF}
-            </span>
-            <span>oggi</span>
-          </div>
-        </Blueprint>
+        {!asset.isManual && (
+          <Blueprint className="asset-chart">
+            <svg viewBox="0 0 320 120" preserveAspectRatio="none" className="asset-chart-svg">
+              <line x1="0" y1="8" x2="320" y2="8" stroke="var(--color-divider)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+              <line x1="0" y1="60" x2="320" y2="60" stroke="var(--color-divider)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+              <line x1="0" y1="112" x2="320" y2="112" stroke="var(--color-divider)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+              <polygon points={asset.chartArea} fill="var(--color-accent-100)" />
+              <polyline
+                points={asset.chartPts}
+                fill="none"
+                stroke="var(--color-accent-700)"
+                strokeWidth={1.5}
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+            <div className="asset-chart-foot">
+              <span>{asset.chartStartF}</span>
+              <span>
+                min {asset.minF} · max {asset.maxF}
+              </span>
+              <span>oggi</span>
+            </div>
+          </Blueprint>
+        )}
 
         <div className="asset-grid">
           <div className="asset-cell">

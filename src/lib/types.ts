@@ -63,10 +63,15 @@ export interface Pac {
 export type SecurityType = 'Azioni' | 'ETF' | 'Crypto';
 export type Currency = 'EUR' | 'USD';
 
-/** Da dove recuperare il prezzo reale: Twelve Data (azioni/ETF) o CoinGecko (crypto). */
+/**
+ * Da dove recuperare il prezzo: Twelve Data (azioni/ETF), CoinGecko (crypto),
+ * o "manuale" per i titoli senza un feed gratuito (es. ETF UCITS europei non
+ * coperti dal piano free) — il prezzo lo aggiorna l'utente a mano.
+ */
 export type FeedRef =
   | { provider: 'td'; symbol: string; mic?: string }
-  | { provider: 'cg'; id: string };
+  | { provider: 'cg'; id: string }
+  | { provider: 'manual' };
 
 export interface SecurityStatic {
   sym: string;
@@ -106,4 +111,6 @@ export interface AppData {
   initialBank: number;
   /** valore investito già in essere, non legato a titoli specifici: si somma al patrimonio investito */
   initialInvested: number;
+  /** prezzo (€) aggiornato a mano per i titoli con feed "manual", per simbolo */
+  manualPrices: Record<string, number>;
 }

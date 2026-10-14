@@ -12,6 +12,10 @@ import type { Security, SecurityStatic } from '../lib/types';
  * gratuita per loro. ASML resta perché ha una quotazione diretta su NASDAQ
  * in USD, disponibile sul piano free. Tolte anche le obbligazioni di stato
  * (BTP) e i fondi comuni italiani, per lo stesso motivo.
+ *
+ * IWDA e QDVE sono ETF UCITS europei reali (nessun feed gratuito trovato,
+ * stessa restrizione): usano `feed: { provider: 'manual' }`, prezzo
+ * aggiornato a mano dall'utente invece che recuperato live.
  */
 export const CATALOG_STATIC: SecurityStatic[] = [
   { sym: 'AAPL', name: 'Apple', type: 'Azioni', ex: 'NASDAQ', cur: 'USD', feed: { provider: 'td', symbol: 'AAPL' } },
@@ -27,6 +31,8 @@ export const CATALOG_STATIC: SecurityStatic[] = [
   { sym: 'QQQ', name: 'Invesco QQQ (Nasdaq 100)', type: 'ETF', ex: 'NASDAQ', cur: 'USD', feed: { provider: 'td', symbol: 'QQQ' } },
   { sym: 'VWO', name: 'Vanguard FTSE Emerging Markets', type: 'ETF', ex: 'NYSE Arca', cur: 'USD', feed: { provider: 'td', symbol: 'VWO' } },
   { sym: 'VYM', name: 'Vanguard High Dividend Yield', type: 'ETF', ex: 'NYSE Arca', cur: 'USD', feed: { provider: 'td', symbol: 'VYM' } },
+  { sym: 'IWDA', name: 'iShares Core MSCI World (IE00B4L5Y983)', type: 'ETF', ex: 'Manuale', cur: 'EUR', feed: { provider: 'manual' } },
+  { sym: 'QDVE', name: 'iShares S&P 500 IT Sector (IE00B3WJKG14)', type: 'ETF', ex: 'Manuale', cur: 'EUR', feed: { provider: 'manual' } },
   { sym: 'BTC', name: 'Bitcoin', type: 'Crypto', ex: 'Crypto', cur: 'USD', feed: { provider: 'cg', id: 'bitcoin' } },
   { sym: 'ETH', name: 'Ethereum', type: 'Crypto', ex: 'Crypto', cur: 'USD', feed: { provider: 'cg', id: 'ethereum' } },
   { sym: 'SOL', name: 'Solana', type: 'Crypto', ex: 'Crypto', cur: 'USD', feed: { provider: 'cg', id: 'solana' } },

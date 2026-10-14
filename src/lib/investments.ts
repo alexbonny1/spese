@@ -39,7 +39,7 @@ function fo(c: Security, v: number): string {
 }
 
 /** Replica la sezione Fisse › Investimenti (riepilogo portafoglio) di `renderVals()`. */
-export function computeInvestments(data: AppData, catalogBySym: Record<string, Security> = liveCatalogBySym()): InvestmentsVals {
+export function computeInvestments(data: AppData, catalogBySym: Record<string, Security> = liveCatalogBySym(data.manualPrices)): InvestmentsVals {
   const holdings = computeHoldings(data.lots, catalogBySym);
   const pf = holdings.reduce(
     (a, h) => ({ value: a.value + h.value, cost: a.cost + h.cost, tax: a.tax + h.tax, divNet: a.divNet + h.divNet }),

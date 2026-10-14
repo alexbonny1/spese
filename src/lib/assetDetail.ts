@@ -1,7 +1,7 @@
 import { computeHoldings, toEur, USD_EUR_RATE } from './calc';
 import { computeChartFromSeries } from './chart';
 import { fmt, fq, MESI, pct, signColor, signedEuro } from './format';
-import { getCachedQuote, hasQuoteError, liveCatalogBySym } from './marketData';
+import { getCachedQuote, hasQuoteError, isManualSecurity, liveCatalogBySym } from './marketData';
 import type { AppData, Security } from './types';
 
 function fo(c: Security, v: number): string {
@@ -43,6 +43,8 @@ export interface AssetDetail {
   ready: boolean;
   /** true se il recupero dei dati di mercato è fallito */
   errored: boolean;
+  /** true per i titoli con prezzo aggiornato a mano (nessun feed gratuito disponibile) */
+  isManual: boolean;
   priceF: string;
   priceEurF: string;
   isUsd: boolean;
@@ -64,13 +66,14 @@ export interface AssetDetail {
 
 /** Replica la costruzione di `asV`/`posV` in `renderVals()` per il Dettaglio titolo. */
 export function computeAssetDetail(data: AppData, sym: string): AssetDetail | null {
-  const catalogBySym = liveCatalogBySym();
+  const catalogBySym = liveCatalogBySym(data.manualPrices);
   const c = catalogBySym[sym];
   if (!c) return null;
 
+  const isManual = isManualSecurity(sym);
   const quote = getCachedQuote(sym);
-  const ready = !!quote;
-  const errored = hasQuoteError(sym);
+  const ready = isManual ? c.price > 0 : !!quote;
+  const errored = !isManual && hasQuoteError(sym);
   const chart = quote ? computeChartFromSeries(quote.series) : { pts: '', area: '', min: 0, max: 0 };
   const chartStart = quote?.series[0]?.t;
   const chartStartF = chartStart ? `${MESI[new Date(chartStart).getMonth()]} ${new Date(chartStart).getFullYear()}` : '';
@@ -117,14 +120,15 @@ export function computeAssetDetail(data: AppData, sym: string): AssetDetail | nu
     ex: c.ex,
     ready,
     errored,
+    isManual,
     priceF: fo(c, c.price),
     priceEurF: fmt(c.price / USD_EUR_RATE),
     isUsd: c.cur === 'USD',
-    r1yF: pct(c.r1y),
-    ytdF: pct(c.ytd),
-    color: signColor(c.r1y),
+    r1yF: isManual ? '—' : pct(c.r1y),
+    ytdF: isManual ? '—' : pct(c.ytd),
+    color: isManual ? 'var(--color-text)' : signColor(c.r1y),
     yldLabel: 'Dividendo annuo',
-    yldF: c.yld ? c.yld.toFixed(2).replace('.', ',') + '%' : '—',
+    yldF: isManual ? '—' : c.yld ? c.yld.toFixed(2).replace('.', ',') + '%' : '—',
     trF: (tr * 100).toString().replace('.', ',') + '%',
     chartPts: chart.pts,
     chartArea: chart.area,

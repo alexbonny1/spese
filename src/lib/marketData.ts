@@ -148,6 +148,7 @@ function canAttempt(key: string): boolean {
 
 /** Avvia (se serve) il recupero di prezzo/rendimenti per un titolo. Non bloccante: aggiorna la cache quando arriva. */
 export function ensureQuote(sym: string, feed: FeedRef): void {
+  if (feed.provider === 'manual') return;
   const cached = quoteCache[sym];
   if (cached && Date.now() - cached.fetchedAt < QUOTE_TTL) return;
   const key = `q:${sym}`;
@@ -174,7 +175,7 @@ export function ensureQuote(sym: string, feed: FeedRef): void {
 
 /** Avvia (se serve) il recupero del dividend yield. Solo per titoli Twelve Data (azioni/ETF); la crypto non paga dividendi. */
 export function ensureYield(sym: string, feed: FeedRef): void {
-  if (feed.provider === 'cg') return;
+  if (feed.provider !== 'td') return;
   const cached = yieldCache[sym];
   if (cached && Date.now() - cached.fetchedAt < YIELD_TTL) return;
   const key = `y:${sym}`;
@@ -196,11 +197,19 @@ export function ensureYield(sym: string, feed: FeedRef): void {
   });
 }
 
-/** Catalogo "vivo": metadati statici + ultimi dati di mercato noti (0 finché non ancora arrivati). */
-export function liveCatalogBySym(): Record<string, Security> {
+/**
+ * Catalogo "vivo": metadati statici + ultimi dati di mercato noti (0 finché non ancora
+ * arrivati). Per i titoli a feed "manual" il prezzo viene da `manualPrices` (dati utente,
+ * passati da `AppData`), non dalla cache di mercato.
+ */
+export function liveCatalogBySym(manualPrices: Record<string, number> = {}): Record<string, Security> {
   const out: Record<string, Security> = {};
   for (const sym in CATALOG_STATIC_BY_SYM) {
     const s = CATALOG_STATIC_BY_SYM[sym];
+    if (s.feed.provider === 'manual') {
+      out[sym] = { ...s, price: manualPrices[sym] ?? 0, r1y: 0, ytd: 0, yld: 0 };
+      continue;
+    }
     const q = quoteCache[sym];
     out[sym] = {
       ...s,
@@ -211,6 +220,10 @@ export function liveCatalogBySym(): Record<string, Security> {
     };
   }
   return out;
+}
+
+export function isManualSecurity(sym: string): boolean {
+  return CATALOG_STATIC_BY_SYM[sym]?.feed.provider === 'manual';
 }
 
 /**

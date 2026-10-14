@@ -62,5 +62,6 @@ export function seed(): AppData {
     initialCash: 0,
     initialBank: 0,
     initialInvested: 0,
+    manualPrices: {},
   };
 }
