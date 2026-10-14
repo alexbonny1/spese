@@ -1,4 +1,5 @@
-import { fq } from '../lib/format';
+import { useState } from 'react';
+import { fmt, fq } from '../lib/format';
 import { getPeriod } from '../lib/period';
 import { useAppState } from '../state/AppStateContext';
 import './SettingsScreen.css';
@@ -6,9 +7,70 @@ import './SettingsScreen.css';
 function clamp(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, v));
 }
+function cleanDecimal(v: string): string {
+  return v.replace(/[^\d,.]/g, '');
+}
 
 interface SettingsScreenProps {
   onOpenRisparmi: () => void;
+}
+
+/** Riga Contanti/Conto: valore + link "Modifica" che apre un campo inline. */
+function EditableAmountRow({
+  label,
+  hint,
+  value,
+  onSave,
+}: {
+  label: string;
+  hint: string;
+  value: number;
+  onSave: (n: number) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [input, setInput] = useState('');
+
+  const save = () => {
+    const n = parseFloat(input.replace(',', '.'));
+    if (!(n >= 0)) return;
+    onSave(n);
+    setEditing(false);
+  };
+
+  return (
+    <div className="settings-row settings-row-amount">
+      <div className="settings-text">
+        <span>{label}</span>
+        <span className="settings-hint">{hint}</span>
+      </div>
+      {editing ? (
+        <div className="settings-amount-edit">
+          <input
+            className="input settings-amount-input"
+            inputMode="decimal"
+            autoFocus
+            value={input}
+            onChange={(e) => setInput(cleanDecimal(e.target.value))}
+            placeholder="0,00"
+          />
+          <button type="button" className="btn btn-primary settings-amount-save" onClick={save}>
+            Salva
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="settings-value settings-amount-trigger"
+          onClick={() => {
+            setInput(String(value).replace('.', ','));
+            setEditing(true);
+          }}
+        >
+          € {fmt(value)} ›
+        </button>
+      )}
+    </div>
+  );
 }
 
 export function SettingsScreen({ onOpenRisparmi }: SettingsScreenProps) {
@@ -27,6 +89,25 @@ export function SettingsScreen({ onOpenRisparmi }: SettingsScreenProps) {
         <h3>Impostazioni</h3>
       </div>
       <div className="settings-body">
+        <h6 className="settings-section">Patrimonio</h6>
+
+        <EditableAmountRow
+          label="Contanti"
+          hint="Quanto hai in contanti oggi"
+          value={data.initialCash}
+          onSave={(n) => setData((prev) => ({ ...prev, initialCash: n }))}
+        />
+        <EditableAmountRow
+          label="Conto / carta"
+          hint="Saldo sul conto o sulla carta digitale"
+          value={data.initialBank}
+          onSave={(n) => setData((prev) => ({ ...prev, initialBank: n }))}
+        />
+        <div className="settings-row">
+          <span className="settings-label-flex">Totale contanti + conto</span>
+          <span className="settings-value-static">€ {fmt(data.initialCash + data.initialBank)}</span>
+        </div>
+
         <h6 className="settings-section">Calcolo dello spendibile</h6>
 
         <div className="settings-row">
