@@ -62,6 +62,12 @@
 .home-networth:hover {
   color: var(--color-accent-700);
 }
+.home-networth-static {
+  cursor: default;
+}
+.home-networth-static:hover {
+  color: var(--color-neutral-700);
+}
 
 /* — alert banner — */
 .home-alert {

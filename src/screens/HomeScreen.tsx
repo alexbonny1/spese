@@ -40,6 +40,7 @@ export function HomeScreen({ onNavigate, onOpenSheet }: HomeScreenProps) {
           <button type="button" className="home-networth" onClick={() => onNavigate('fix', 'inv')}>
             Patrimonio totale € {v.netWorthF} ›
           </button>
+          <span className="home-networth home-networth-static">Contanti e conto € {v.cashBankF}</span>
         </div>
 
         {v.alertOn && (
