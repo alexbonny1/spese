@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { AddMovementSheet, type MovementType, type SavedMovement } from './components/AddMovementSheet';
+import { BuySheet, type BuyResult } from './components/BuySheet';
 import { TabBar } from './components/TabBar';
+import { CATALOG_BY_SYM } from './data/catalog';
+import { fq, MESI } from './lib/format';
 import { uid } from './lib/id';
 import type { FixTabId, TabId } from './lib/nav';
 import { AssetDetailScreen } from './screens/AssetDetailScreen';
@@ -18,6 +21,7 @@ function Shell() {
   const [sheet, setSheet] = useState<MovementType | null>(null);
   const [search, setSearch] = useState<{ prefill: number | null } | null>(null);
   const [assetSym, setAssetSym] = useState<string | null>(null);
+  const [buySym, setBuySym] = useState<string | null>(null);
   const { setData } = useAppState();
 
   const goTab = (t: TabId, fs?: FixTabId) => {
@@ -42,6 +46,30 @@ function Shell() {
       return { ...prev, tx: [...prev.tx, { id, name: cat, cat, amt: type === 'in' ? amt : -amt, day: today }] };
     });
     setSheet(null);
+  };
+
+  const confirmBuy = (sym: string, result: BuyResult) => {
+    const now = new Date();
+    const today = now.getDate();
+    const lotId = uid();
+    setData((prev) => {
+      const lot = { id: lotId, sym, qty: result.qty, price: result.price, fee: result.fee, date: `${today} ${MESI[now.getMonth()]} ${now.getFullYear()}` };
+      const next = { ...prev, lots: [...prev.lots, lot] };
+      if (result.pac && result.pacDay != null) {
+        return {
+          ...next,
+          pacs: [...prev.pacs.filter((p) => p.sym !== sym), { id: uid(), sym, amt: Math.round(result.total * 100) / 100, day: result.pacDay }],
+        };
+      }
+      return {
+        ...next,
+        tx: [...prev.tx, { id: uid(), name: `${sym} · ${fq(result.qty)} quote`, cat: 'Investimento', amt: -Math.round(result.total * 100) / 100, day: today, lotId }],
+      };
+    });
+    setBuySym(null);
+    setSearch(null);
+    setTab('fix');
+    setFsTab('inv');
   };
 
   return (
@@ -71,7 +99,16 @@ function Shell() {
         />
       )}
       {assetSym && (
-        <AssetDetailScreen sym={assetSym} onBack={() => setAssetSym(null)} onBuy={() => {}} />
+        <AssetDetailScreen sym={assetSym} onBack={() => setAssetSym(null)} onBuy={() => setBuySym(assetSym)} />
+      )}
+      {buySym && CATALOG_BY_SYM[buySym] && (
+        <BuySheet
+          security={CATALOG_BY_SYM[buySym]}
+          prefillAmount={search?.prefill ?? null}
+          today={new Date().getDate()}
+          onConfirm={(result) => confirmBuy(buySym, result)}
+          onClose={() => setBuySym(null)}
+        />
       )}
     </div>
   );

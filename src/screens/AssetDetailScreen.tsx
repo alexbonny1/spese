@@ -149,7 +149,7 @@ export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps
       </div>
 
       <div className="asset-footer">
-        <Blueprint as="button" type="button" className="btn btn-primary asset-buy-btn" onClick={onBuy} disabled>
+        <Blueprint as="button" type="button" className="btn btn-primary asset-buy-btn" onClick={onBuy}>
           Compra {asset.sym}
         </Blueprint>
       </div>
