@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Blueprint } from '../components/Blueprint';
+import { PromoPopup } from '../components/PromoPopup';
 import { computeHome } from '../lib/home';
 import { useMarketTick } from '../lib/marketData';
 import type { FixTabId, TabId } from '../lib/nav';
@@ -117,6 +118,8 @@ export function HomeScreen({ onNavigate, onOpenSheet }: HomeScreenProps) {
           − Uscita
         </Blueprint>
       </div>
+
+      {v.netWorth === 0 && data.tx.length === 0 && <PromoPopup onAddMovement={() => onOpenSheet('in')} />}
     </div>
   );
 }

@@ -18,6 +18,7 @@ export interface HomeVals {
   spendableF: string;
   perDayF: string;
   showPerDay: boolean;
+  netWorth: number;
   netWorthF: string;
   alertOn: boolean;
   alertText: string;
@@ -92,6 +93,7 @@ export function computeHome(
     spendableF: (spendable < 0 ? '−' : '') + fmt(spendable),
     perDayF: fmt(perDayN),
     showPerDay: data.perDay,
+    netWorth,
     netWorthF: fmt(netWorth),
     alertOn: data.alert > 0 && perDayN < data.alert,
     alertText: `Sei sotto la tua soglia di € ${data.alert} al giorno. Restano € ${fmt(perDayN)} al giorno fino a fine periodo.`,

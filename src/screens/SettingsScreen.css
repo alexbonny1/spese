@@ -1,0 +1,112 @@
+.settings-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.settings-top {
+  flex: none;
+  padding: 16px 20px 0;
+}
+.settings-top h3 {
+  margin: 0;
+}
+
+.settings-body {
+  flex: 1;
+  overflow: auto;
+  padding: 4px 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-section {
+  margin: 22px 0 0;
+  color: var(--color-neutral-700);
+}
+.settings-section:first-child {
+  margin-top: 14px;
+}
+
+.settings-row {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+.settings-row-btn {
+  cursor: pointer;
+}
+
+.settings-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+.settings-hint {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+}
+
+.settings-value {
+  flex: none;
+  font-size: 14px;
+  color: var(--color-neutral-800);
+}
+.settings-label-flex {
+  flex: 1;
+  font-size: 14px;
+}
+.settings-value-static {
+  font-size: 14px;
+  color: var(--color-neutral-800);
+}
+
+.settings-stepper {
+  flex: none;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-divider);
+}
+.settings-stepper-btn {
+  border: 0 !important;
+  width: 32px;
+  height: 32px;
+}
+.settings-stepper-val {
+  width: 34px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 17px;
+}
+.settings-stepper-val-wide {
+  width: 52px;
+}
+
+.settings-toggle-track {
+  flex: none;
+  width: 38px;
+  height: 20px;
+  border: 1px solid var(--color-divider);
+  position: relative;
+}
+.settings-toggle-knob {
+  position: absolute;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  transition: left 0.2s;
+}
+
+.settings-reset {
+  align-self: flex-start;
+  margin-top: 16px;
+  font-size: 14px;
+}

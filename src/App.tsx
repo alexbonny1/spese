@@ -11,8 +11,8 @@ import { FixedScreen } from './screens/FixedScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { MovementsScreen } from './screens/MovementsScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
-import { PlaceholderScreen } from './screens/PlaceholderScreen';
 import { SearchScreen } from './screens/SearchScreen';
+import { SettingsScreen } from './screens/SettingsScreen';
 import { AppStateProvider, useAppState } from './state/AppStateContext';
 import './App.css';
 
@@ -96,7 +96,7 @@ function Shell() {
             onOpenAsset={setAssetSym}
           />
         )}
-        {tab === 'set' && <PlaceholderScreen title="Impostazioni" />}
+        {tab === 'set' && <SettingsScreen onOpenRisparmi={() => goTab('fix', 'risp')} />}
       </div>
       <TabBar active={tab} onChange={(t) => goTab(t)} />
       {sheet && (
