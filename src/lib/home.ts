@@ -70,7 +70,7 @@ export function computeHome(
   const holdings = computeHoldings(data.lots, catalogBySym);
   const portfolioValue = holdings.reduce((x, h) => x + h.value, 0);
   const pgTotal = piggiesCalc.reduce((x, p) => x + p.saved, 0);
-  const netWorth = spendable + pgTotal + portfolioValue;
+  const netWorth = data.initialBalance + spendable + pgTotal + portfolioValue;
 
   const perDayN = Math.max(0, spendable) / period.daysLeft;
 

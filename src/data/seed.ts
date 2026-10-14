@@ -58,5 +58,7 @@ export function seed(): AppData {
     alert: 0,
     perDay: true,
     extra: true,
+    onboarded: true,
+    initialBalance: 0,
   };
 }

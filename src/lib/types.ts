@@ -88,4 +88,8 @@ export interface AppData {
   alert: number;
   perDay: boolean;
   extra: boolean;
+  /** true dopo la schermata di benvenuto (patrimonio iniziale impostato) */
+  onboarded: boolean;
+  /** patrimonio di partenza dichiarato dall'utente, non derivato dai movimenti */
+  initialBalance: number;
 }

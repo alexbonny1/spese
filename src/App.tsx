@@ -10,6 +10,7 @@ import { AssetDetailScreen } from './screens/AssetDetailScreen';
 import { FixedScreen } from './screens/FixedScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { MovementsScreen } from './screens/MovementsScreen';
+import { OnboardingScreen } from './screens/OnboardingScreen';
 import { PlaceholderScreen } from './screens/PlaceholderScreen';
 import { SearchScreen } from './screens/SearchScreen';
 import { AppStateProvider, useAppState } from './state/AppStateContext';
@@ -22,7 +23,7 @@ function Shell() {
   const [search, setSearch] = useState<{ prefill: number | null } | null>(null);
   const [assetSym, setAssetSym] = useState<string | null>(null);
   const [buySym, setBuySym] = useState<string | null>(null);
-  const { setData } = useAppState();
+  const { data, setData, completeOnboarding } = useAppState();
 
   const goTab = (t: TabId, fs?: FixTabId) => {
     setTab(t);
@@ -71,6 +72,16 @@ function Shell() {
     setTab('fix');
     setFsTab('inv');
   };
+
+  if (!data.onboarded) {
+    return (
+      <div className="app-shell">
+        <div className="app-content">
+          <OnboardingScreen onComplete={completeOnboarding} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-shell">
