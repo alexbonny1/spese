@@ -4,6 +4,7 @@ import { FixedEditSheet, type FixedEditDraft } from '../components/FixedEditShee
 import { computeFixedScreen, type FixedRow } from '../lib/fixed';
 import { uid } from '../lib/id';
 import type { FixTabId } from '../lib/nav';
+import type { FixedExpense } from '../lib/types';
 import { useAppState } from '../state/AppStateContext';
 import './FixedScreen.css';
 import { InvestmentsPanel } from './InvestmentsPanel';
@@ -33,18 +34,27 @@ export function FixedScreen({ fsTab, onFsTabChange, onSearch, onOpenAsset }: Fix
       onFsTabChange('inv');
       return;
     }
-    setEdit({ kind: row.kind, id: row.id, name: row.name, amt: String(row.amt).replace('.', ','), day: String(row.day) });
+    const full = row.kind === 'fix' ? data.fixed.find((x) => x.id === row.id) : undefined;
+    setEdit({
+      kind: row.kind,
+      id: row.id,
+      name: row.name,
+      amt: String(row.amt).replace('.', ','),
+      day: String(row.day),
+      freq: full?.freq ?? 'monthly',
+      month: String(full?.month ?? 1),
+    });
   };
 
-  const newEdit = (kind: 'inc' | 'fix') => setEdit({ kind, id: null, name: '', amt: '', day: '' });
+  const newEdit = (kind: 'inc' | 'fix') => setEdit({ kind, id: null, name: '', amt: '', day: '', freq: 'monthly', month: '1' });
 
-  const saveEdit = (item: { name: string; amt: number; day: number }) => {
+  const saveEdit = (item: Pick<FixedExpense, 'name' | 'amt' | 'day' | 'freq' | 'month'>) => {
     if (!edit) return;
     setData((prev) => {
       if (edit.kind === 'inc') {
         const next = edit.id
-          ? prev.incomes.map((x) => (x.id === edit.id ? { ...x, ...item } : x))
-          : [...prev.incomes, { id: uid(), ...item }];
+          ? prev.incomes.map((x) => (x.id === edit.id ? { ...x, name: item.name, amt: item.amt, day: item.day } : x))
+          : [...prev.incomes, { id: uid(), name: item.name, amt: item.amt, day: item.day }];
         return { ...prev, incomes: next };
       }
       const next = edit.id

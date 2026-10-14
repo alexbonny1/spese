@@ -55,6 +55,20 @@
   background: transparent;
 }
 
+.add-sheet-method {
+  display: flex;
+  gap: 8px;
+}
+.add-sheet-method-btn {
+  flex: 1;
+  cursor: pointer;
+  padding: 7px 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  border: 1px solid var(--color-divider);
+  background: transparent;
+}
+
 .add-sheet-rec {
   all: unset;
   cursor: pointer;

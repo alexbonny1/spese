@@ -30,7 +30,7 @@ function Shell() {
     if (fs) setFsTab(fs);
   };
 
-  const saveMovement = ({ type, amt, cat, rec }: SavedMovement) => {
+  const saveMovement = ({ type, amt, cat, rec, method }: SavedMovement) => {
     if (type === 'out' && cat === 'Investimento') {
       setSheet(null);
       setSearch({ prefill: amt });
@@ -44,7 +44,7 @@ function Shell() {
           ? { ...prev, incomes: [...prev.incomes, { id, name: cat, amt, day: today }] }
           : { ...prev, fixed: [...prev.fixed, { id, name: cat, amt, day: today }] };
       }
-      return { ...prev, tx: [...prev.tx, { id, name: cat, cat, amt: type === 'in' ? amt : -amt, day: today }] };
+      return { ...prev, tx: [...prev.tx, { id, name: cat, cat, amt: type === 'in' ? amt : -amt, day: today, method }] };
     });
     setSheet(null);
   };

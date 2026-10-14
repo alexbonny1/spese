@@ -10,7 +10,13 @@ export interface FixedExpense {
   name: string;
   amt: number;
   day: number;
+  /** 'annual' = pagata una volta l'anno (al mese/giorno indicati), spalmata su 12 mesi nello spendibile. Assente/'monthly' = ogni mese. */
+  freq?: 'monthly' | 'annual';
+  /** mese (1-12) in cui cade, solo per freq 'annual' */
+  month?: number;
 }
+
+export type PaymentMethod = 'cash' | 'card';
 
 export interface Transaction {
   id: string;
@@ -20,6 +26,8 @@ export interface Transaction {
   amt: number;
   day: number;
   lotId?: string;
+  /** dove sono finiti/usciti i soldi: contanti o conto/carta. Assente per i movimenti Investimento. */
+  method?: PaymentMethod;
 }
 
 export interface PiggyHistEntry {

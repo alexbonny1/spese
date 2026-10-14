@@ -1,6 +1,8 @@
 import type { AppData, Security } from './types';
+import { computeCashBalances } from './cash';
 import { computeHoldings, computePiggy } from './calc';
 import { fmt, MESI } from './format';
+import { monthlyAmt } from './fixed';
 import { liveCatalogBySym } from './marketData';
 import { getPeriod } from './period';
 
@@ -46,13 +48,14 @@ export function computeHome(
   const period = getPeriod(today, data.payday);
   const todayDay = today.getDate();
   const sum = (arr: { amt: number }[]) => arr.reduce((x, a) => x + a.amt, 0);
+  const cashBalances = computeCashBalances(data);
 
   const extraIn = data.tx.filter((t) => t.amt > 0).reduce((x, t) => x + t.amt, 0);
   const incFixed = sum(data.incomes);
   const income = incFixed + (data.extra ? extraIn : 0);
 
   const pacTot = sum(data.pacs);
-  const fixed = sum(data.fixed) + pacTot;
+  const fixed = data.fixed.reduce((x, f) => x + monthlyAmt(f), 0) + pacTot;
 
   const spent = -data.tx
     .filter((t) => t.amt < 0 && t.cat !== 'Investimento')
@@ -96,7 +99,7 @@ export function computeHome(
     showPerDay: data.perDay,
     netWorth,
     netWorthF: fmt(netWorth),
-    cashBankF: fmt(data.initialCash + data.initialBank),
+    cashBankF: fmt(cashBalances.cash + cashBalances.bank),
     alertOn: data.alert > 0 && perDayN < data.alert,
     alertText: `Sei sotto la tua soglia di € ${data.alert} al giorno. Restano € ${fmt(perDayN)} al giorno fino a fine periodo.`,
     incomeF: fmt(income),

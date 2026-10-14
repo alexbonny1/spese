@@ -18,7 +18,7 @@ export function RisparmiPanel() {
   const v = useMemo(() => computeRisparmi(data, today), [data]);
   const detail = useMemo(() => (detailId ? computePiggyDetail(data, today, detailId) : null), [data, detailId]);
 
-  const newPiggy = () => setEdit({ id: null, name: '', goal: '', date: '', quota: '' });
+  const newPiggy = () => setEdit({ id: null, name: '', goal: '', date: '', quota: '', saved: 0 });
 
   const editPiggy = () => {
     if (!detail) return;
@@ -28,6 +28,7 @@ export function RisparmiPanel() {
       goal: String(detail.piggy.goal),
       date: `${String(detail.piggy.tm).padStart(2, '0')}/${detail.piggy.ty}`,
       quota: String(detail.piggy.quota),
+      saved: detail.saved,
     });
   };
 

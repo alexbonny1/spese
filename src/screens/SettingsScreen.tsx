@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { computeCashBalances, netTxByMethod } from '../lib/cash';
 import { fmt, fq } from '../lib/format';
 import { getPeriod } from '../lib/period';
 import { useAppState } from '../state/AppStateContext';
@@ -78,6 +79,8 @@ export function SettingsScreen({ onOpenRisparmi }: SettingsScreenProps) {
   const period = getPeriod(new Date(), data.payday);
   const quotaTot = data.piggies.reduce((x, p) => x + p.quota, 0);
 
+  const cashBalances = computeCashBalances(data);
+
   const setPayday = (d: number) => setData((prev) => ({ ...prev, payday: clamp(prev.payday + d, 1, 28) }));
   const setAlert = (d: number) => setData((prev) => ({ ...prev, alert: clamp(prev.alert + d, 0, 200) }));
   const toggleExtra = () => setData((prev) => ({ ...prev, extra: !prev.extra }));
@@ -93,19 +96,19 @@ export function SettingsScreen({ onOpenRisparmi }: SettingsScreenProps) {
 
         <EditableAmountRow
           label="Contanti"
-          hint="Quanto hai in contanti oggi"
-          value={data.initialCash}
-          onSave={(n) => setData((prev) => ({ ...prev, initialCash: n }))}
+          hint="Quanto hai in contanti adesso: aggiorna anche da solo coi movimenti in contanti"
+          value={cashBalances.cash}
+          onSave={(n) => setData((prev) => ({ ...prev, initialCash: n - netTxByMethod(prev, 'cash') }))}
         />
         <EditableAmountRow
           label="Conto / carta"
-          hint="Saldo sul conto o sulla carta digitale"
-          value={data.initialBank}
-          onSave={(n) => setData((prev) => ({ ...prev, initialBank: n }))}
+          hint="Saldo sul conto o sulla carta digitale: aggiorna anche da solo coi movimenti in carta"
+          value={cashBalances.bank}
+          onSave={(n) => setData((prev) => ({ ...prev, initialBank: n - netTxByMethod(prev, 'card') }))}
         />
         <div className="settings-row">
           <span className="settings-label-flex">Totale contanti + conto</span>
-          <span className="settings-value-static">€ {fmt(data.initialCash + data.initialBank)}</span>
+          <span className="settings-value-static">€ {fmt(cashBalances.cash + cashBalances.bank)}</span>
         </div>
 
         <h6 className="settings-section">Calcolo dello spendibile</h6>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { PaymentMethod } from '../lib/types';
 import { Blueprint } from './Blueprint';
 import { SheetOverlay } from './SheetOverlay';
 import './AddMovementSheet.css';
@@ -10,6 +11,7 @@ export interface SavedMovement {
   amt: number;
   cat: string;
   rec: boolean;
+  method: PaymentMethod;
 }
 
 const OUT_CATS = ['Spesa', 'Ristoranti', 'Trasporti', 'Svago', 'Casa', 'Investimento', 'Altro'];
@@ -36,12 +38,14 @@ export function AddMovementSheet({ initialType, onSave, onClose }: AddMovementSh
   const [amount, setAmount] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [rec, setRec] = useState(false);
+  const [method, setMethod] = useState<PaymentMethod>('card');
 
   useEffect(() => {
     setType(initialType);
     setAmount('');
     setCat(null);
     setRec(false);
+    setMethod('card');
   }, [initialType]);
 
   const out = type === 'out';
@@ -50,6 +54,7 @@ export function AddMovementSheet({ initialType, onSave, onClose }: AddMovementSh
   const val = parseFloat((amount || '0').replace(',', '.'));
   const isInv = out && activeCat === 'Investimento';
   const showRec = !isInv;
+  const showMethod = !isInv && !rec;
   const cantSave = !(val > 0);
   const saveLabel = !(val > 0)
     ? 'Inserisci un importo'
@@ -64,7 +69,7 @@ export function AddMovementSheet({ initialType, onSave, onClose }: AddMovementSh
 
   const save = () => {
     if (!(val > 0)) return;
-    onSave({ type, amt: val, cat: activeCat, rec: isInv ? false : rec });
+    onSave({ type, amt: val, cat: activeCat, rec: isInv ? false : rec, method });
   };
 
   return (
@@ -118,6 +123,35 @@ export function AddMovementSheet({ initialType, onSave, onClose }: AddMovementSh
             );
           })}
         </div>
+
+        {showMethod && (
+          <div className="add-sheet-method">
+            <button
+              type="button"
+              className="add-sheet-method-btn"
+              style={{
+                background: method === 'card' ? 'var(--color-accent-100)' : 'transparent',
+                borderColor: method === 'card' ? 'var(--color-accent)' : 'var(--color-divider)',
+                color: method === 'card' ? 'var(--color-accent-800)' : 'var(--color-text)',
+              }}
+              onClick={() => setMethod('card')}
+            >
+              Carta / conto
+            </button>
+            <button
+              type="button"
+              className="add-sheet-method-btn"
+              style={{
+                background: method === 'cash' ? 'var(--color-accent-100)' : 'transparent',
+                borderColor: method === 'cash' ? 'var(--color-accent)' : 'var(--color-divider)',
+                color: method === 'cash' ? 'var(--color-accent-800)' : 'var(--color-text)',
+              }}
+              onClick={() => setMethod('cash')}
+            >
+              Contanti
+            </button>
+          </div>
+        )}
 
         {showRec && (
           <button type="button" className="add-sheet-rec" onClick={() => setRec((r) => !r)}>
