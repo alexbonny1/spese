@@ -6,7 +6,7 @@ import type { AppData, Security, SecurityType } from './types';
 
 export type TypeFilter = 'Tutti' | SecurityType;
 
-export const TYPE_CHIPS: TypeFilter[] = ['Tutti', 'Azioni', 'Crypto'];
+export const TYPE_CHIPS: TypeFilter[] = ['Tutti', 'Azioni', 'ETF', 'Crypto'];
 
 export interface SearchResultRow {
   sym: string;
