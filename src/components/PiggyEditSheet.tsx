@@ -33,6 +33,12 @@ function toNum(s: string): number {
   return parseFloat(s.replace(',', '.'));
 }
 
+/** Formatta cifre digitate in "MM/AAAA" da solo, senza bisogno del tasto "/" (assente sulle tastiere numeriche del telefono). */
+function formatDateDigits(v: string): string {
+  const digits = v.replace(/\D/g, '').slice(0, 6);
+  return digits.length <= 2 ? digits : `${digits.slice(0, 2)}/${digits.slice(2)}`;
+}
+
 /** Mesi da oggi al MM/AAAA indicato (può essere negativo se già passato). */
 function monthsFromNow(tm: number, ty: number): number {
   const now = new Date();
@@ -88,7 +94,7 @@ export function PiggyEditSheet({ draft, onSave, onDelete, onClose }: PiggyEditSh
     }
   };
   const onDateChange = (v: string) => {
-    const d = v.replace(/[^\d/]/g, '').slice(0, 7);
+    const d = formatDateDigits(v);
     setDate(d);
     setLastEdited('date');
     const q = quotaFromDate(goalN, draft.saved, d);
