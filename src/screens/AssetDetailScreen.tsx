@@ -33,6 +33,14 @@ export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps
     setEditingPrice(false);
   };
 
+  const clearManualOverride = () => {
+    setData((prev) => {
+      const next = { ...prev.manualPrices };
+      delete next[sym];
+      return { ...prev, manualPrices: next };
+    });
+  };
+
   const manualPriceForm = (
     <div className="asset-manual-form">
       <div className="field">
@@ -108,21 +116,38 @@ export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps
             )}
           </div>
           {asset.isUsd && <span className="asset-eur-approx">≈ € {asset.priceEurF} al cambio 1,08</span>}
-          {asset.isManual &&
-            (editingPrice ? (
-              manualPriceForm
-            ) : (
-              <button
-                type="button"
-                className="btn btn-ghost asset-manual-edit"
-                onClick={() => {
-                  setPriceInput(String(asset.priceF.replace(/[^\d,]/g, '')));
-                  setEditingPrice(true);
-                }}
-              >
-                Modifica prezzo
-              </button>
-            ))}
+          {asset.isManual && (
+            <>
+              {asset.hasDailyQuote && (
+                <span className="asset-manual-note">
+                  {asset.hasManualOverride
+                    ? 'Prezzo impostato a mano: non si aggiorna più da solo.'
+                    : `Aggiornato automaticamente il ${asset.dailyUpdatedAtF}.`}
+                </span>
+              )}
+              {editingPrice ? (
+                manualPriceForm
+              ) : (
+                <div className="asset-manual-actions">
+                  <button
+                    type="button"
+                    className="btn btn-ghost asset-manual-edit"
+                    onClick={() => {
+                      setPriceInput(String(asset.priceF.replace(/[^\d,]/g, '')));
+                      setEditingPrice(true);
+                    }}
+                  >
+                    Modifica prezzo
+                  </button>
+                  {asset.hasDailyQuote && asset.hasManualOverride && (
+                    <button type="button" className="btn btn-ghost asset-manual-edit" onClick={clearManualOverride}>
+                      Torna al prezzo automatico
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {!asset.isManual && (

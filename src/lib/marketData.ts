@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { CATALOG_STATIC_BY_SYM } from '../data/catalog';
+import dailyQuotes from '../data/dailyQuotes.json';
 import type { FeedRef, Security } from './types';
+
+const DAILY_QUOTES: Record<string, { price: number; updatedAt: string }> = dailyQuotes;
 
 const TD_API_KEY = import.meta.env.VITE_TD_API_KEY as string | undefined;
 
@@ -207,7 +210,8 @@ export function liveCatalogBySym(manualPrices: Record<string, number> = {}): Rec
   for (const sym in CATALOG_STATIC_BY_SYM) {
     const s = CATALOG_STATIC_BY_SYM[sym];
     if (s.feed.provider === 'manual') {
-      out[sym] = { ...s, price: manualPrices[sym] ?? 0, r1y: 0, ytd: 0, yld: 0 };
+      const price = manualPrices[sym] ?? DAILY_QUOTES[sym]?.price ?? 0;
+      out[sym] = { ...s, price, r1y: 0, ytd: 0, yld: 0 };
       continue;
     }
     const q = quoteCache[sym];
@@ -224,6 +228,11 @@ export function liveCatalogBySym(manualPrices: Record<string, number> = {}): Rec
 
 export function isManualSecurity(sym: string): boolean {
   return CATALOG_STATIC_BY_SYM[sym]?.feed.provider === 'manual';
+}
+
+/** Prezzo aggiornato una volta al giorno via GitHub Actions per i titoli manuali che hanno un ticker Yahoo Finance mappato in `scripts/fetch-daily-quotes.mjs`. */
+export function getDailyQuote(sym: string): { price: number; updatedAt: string } | undefined {
+  return DAILY_QUOTES[sym];
 }
 
 /**

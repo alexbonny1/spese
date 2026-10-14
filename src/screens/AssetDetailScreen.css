@@ -213,3 +213,12 @@
   padding-inline: 0;
   margin-top: 2px;
 }
+.asset-manual-note {
+  font-size: 11px;
+  color: var(--color-neutral-700);
+  margin-top: 4px;
+}
+.asset-manual-actions {
+  display: flex;
+  gap: 16px;
+}

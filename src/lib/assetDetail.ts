@@ -1,7 +1,7 @@
 import { computeHoldings, toEur, USD_EUR_RATE } from './calc';
 import { computeChartFromSeries } from './chart';
 import { fmt, fq, MESI, pct, signColor, signedEuro } from './format';
-import { getCachedQuote, hasQuoteError, isManualSecurity, liveCatalogBySym } from './marketData';
+import { getCachedQuote, getDailyQuote, hasQuoteError, isManualSecurity, liveCatalogBySym } from './marketData';
 import type { AppData, Security } from './types';
 
 function fo(c: Security, v: number): string {
@@ -45,6 +45,11 @@ export interface AssetDetail {
   errored: boolean;
   /** true per i titoli con prezzo aggiornato a mano (nessun feed gratuito disponibile) */
   isManual: boolean;
+  /** true se questo titolo manuale ha anche un prezzo auto-aggiornato una volta al giorno */
+  hasDailyQuote: boolean;
+  /** true se l'utente ha impostato un prezzo a mano, che quindi sovrascrive l'aggiornamento automatico */
+  hasManualOverride: boolean;
+  dailyUpdatedAtF: string;
   priceF: string;
   priceEurF: string;
   isUsd: boolean;
@@ -71,6 +76,14 @@ export function computeAssetDetail(data: AppData, sym: string): AssetDetail | nu
   if (!c) return null;
 
   const isManual = isManualSecurity(sym);
+  const dailyQuote = getDailyQuote(sym);
+  const hasManualOverride = data.manualPrices[sym] != null;
+  const dailyUpdatedAtF = dailyQuote
+    ? (() => {
+        const d = new Date(dailyQuote.updatedAt);
+        return `${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}`;
+      })()
+    : '';
   const quote = getCachedQuote(sym);
   const ready = isManual ? c.price > 0 : !!quote;
   const errored = !isManual && hasQuoteError(sym);
@@ -121,6 +134,9 @@ export function computeAssetDetail(data: AppData, sym: string): AssetDetail | nu
     ready,
     errored,
     isManual,
+    hasDailyQuote: !!dailyQuote,
+    hasManualOverride,
+    dailyUpdatedAtF,
     priceF: fo(c, c.price),
     priceEurF: fmt(c.price / USD_EUR_RATE),
     isUsd: c.cur === 'USD',
