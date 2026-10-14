@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { AddMovementSheet, type MovementType, type SavedMovement } from './components/AddMovementSheet';
 import { BuySheet, type BuyResult } from './components/BuySheet';
 import { TabBar } from './components/TabBar';
-import { CATALOG_BY_SYM } from './data/catalog';
 import { fq, MESI } from './lib/format';
 import { uid } from './lib/id';
+import { liveCatalogBySym } from './lib/marketData';
 import type { FixTabId, TabId } from './lib/nav';
 import { AssetDetailScreen } from './screens/AssetDetailScreen';
 import { FixedScreen } from './screens/FixedScreen';
@@ -112,9 +112,9 @@ function Shell() {
       {assetSym && (
         <AssetDetailScreen sym={assetSym} onBack={() => setAssetSym(null)} onBuy={() => setBuySym(assetSym)} />
       )}
-      {buySym && CATALOG_BY_SYM[buySym] && (
+      {buySym && liveCatalogBySym()[buySym] && (
         <BuySheet
-          security={CATALOG_BY_SYM[buySym]}
+          security={liveCatalogBySym()[buySym]}
           prefillAmount={search?.prefill ?? null}
           today={new Date().getDate()}
           onConfirm={(result) => confirmBuy(buySym, result)}

@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { Blueprint } from '../components/Blueprint';
 import { FullScreenOverlay } from '../components/FullScreenOverlay';
 import { computeAssetDetail } from '../lib/assetDetail';
+import { useMarketTick } from '../lib/marketData';
 import { useAppState } from '../state/AppStateContext';
 import './AssetDetailScreen.css';
 
@@ -14,9 +15,28 @@ interface AssetDetailScreenProps {
 
 export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps) {
   const { data } = useAppState();
-  const asset = useMemo(() => computeAssetDetail(data, sym), [data, sym]);
+  const marketTick = useMarketTick([sym], { withYield: true });
+  const asset = useMemo(() => computeAssetDetail(data, sym), [data, sym, marketTick]);
 
   if (!asset) return null;
+
+  if (!asset.ready) {
+    return (
+      <FullScreenOverlay zIndex={11}>
+        <div className="asset-top">
+          <button type="button" className="btn btn-ghost" onClick={onBack}>
+            <ChevronLeft size={18} strokeWidth={1.5} />
+            Indietro
+          </button>
+        </div>
+        <div className="asset-loading">
+          {asset.errored
+            ? 'Impossibile recuperare i dati di mercato in questo momento. Riprova più tardi.'
+            : 'Caricamento dati di mercato…'}
+        </div>
+      </FullScreenOverlay>
+    );
+  }
 
   return (
     <FullScreenOverlay zIndex={11}>
@@ -57,7 +77,7 @@ export function AssetDetailScreen({ sym, onBack, onBuy }: AssetDetailScreenProps
             />
           </svg>
           <div className="asset-chart-foot">
-            <span>ott 2025</span>
+            <span>{asset.chartStartF}</span>
             <span>
               min {asset.minF} · max {asset.maxF}
             </span>

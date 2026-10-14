@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Blueprint } from '../components/Blueprint';
 import { computeHome } from '../lib/home';
+import { useMarketTick } from '../lib/marketData';
 import type { FixTabId, TabId } from '../lib/nav';
 import { useAppState } from '../state/AppStateContext';
 import './HomeScreen.css';
@@ -19,7 +20,9 @@ interface HomeScreenProps {
 
 export function HomeScreen({ onNavigate, onOpenSheet }: HomeScreenProps) {
   const { data } = useAppState();
-  const v = useMemo(() => computeHome(data, new Date()), [data]);
+  const heldSyms = useMemo(() => [...new Set(data.lots.map((l) => l.sym))], [data.lots]);
+  const marketTick = useMarketTick(heldSyms, { withYield: true });
+  const v = useMemo(() => computeHome(data, new Date()), [data, marketTick]);
 
   return (
     <div className="home-screen">

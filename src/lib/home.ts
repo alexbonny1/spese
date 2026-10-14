@@ -1,7 +1,7 @@
 import type { AppData, Security } from './types';
-import { CATALOG_BY_SYM } from '../data/catalog';
 import { computeHoldings, computePiggy } from './calc';
 import { fmt, MESI } from './format';
+import { liveCatalogBySym } from './marketData';
 import { getPeriod } from './period';
 
 export interface RecentTx {
@@ -39,7 +39,7 @@ export interface HomeVals {
 export function computeHome(
   data: AppData,
   today: Date,
-  catalogBySym: Record<string, Security> = CATALOG_BY_SYM,
+  catalogBySym: Record<string, Security> = liveCatalogBySym(),
 ): HomeVals {
   const period = getPeriod(today, data.payday);
   const todayDay = today.getDate();
@@ -65,12 +65,12 @@ export function computeHome(
   const quotaTot = piggiesCalc.reduce((x, p) => x + p.piggy.quota, 0);
   const saveMonth = quotaTot + piggiesCalc.reduce((x, p) => x + p.manual, 0);
 
-  const spendable = income - fixed - spent - invested - saveMonth;
+  const spendable = data.initialCash + data.initialBank + income - fixed - spent - invested - saveMonth;
 
   const holdings = computeHoldings(data.lots, catalogBySym);
-  const portfolioValue = holdings.reduce((x, h) => x + h.value, 0);
+  const portfolioValue = data.initialInvested + holdings.reduce((x, h) => x + h.value, 0);
   const pgTotal = piggiesCalc.reduce((x, p) => x + p.saved, 0);
-  const netWorth = data.initialBalance + spendable + pgTotal + portfolioValue;
+  const netWorth = spendable + pgTotal + portfolioValue;
 
   const perDayN = Math.max(0, spendable) / period.daysLeft;
 

@@ -1,7 +1,7 @@
-import { CATALOG_BY_SYM } from '../data/catalog';
 import { computeHoldings, toEur, USD_EUR_RATE } from './calc';
-import { computeChart } from './chart';
-import { fmt, fq, pct, signColor, signedEuro } from './format';
+import { computeChartFromSeries } from './chart';
+import { fmt, fq, MESI, pct, signColor, signedEuro } from './format';
+import { getCachedQuote, hasQuoteError, liveCatalogBySym } from './marketData';
 import type { AppData, Security } from './types';
 
 function fo(c: Security, v: number): string {
@@ -39,6 +39,10 @@ export interface AssetDetail {
   name: string;
   type: string;
   ex: string;
+  /** true quando i dati di mercato reali sono arrivati e si può mostrare il resto */
+  ready: boolean;
+  /** true se il recupero dei dati di mercato è fallito */
+  errored: boolean;
   priceF: string;
   priceEurF: string;
   isUsd: boolean;
@@ -50,6 +54,7 @@ export interface AssetDetail {
   trF: string;
   chartPts: string;
   chartArea: string;
+  chartStartF: string;
   minF: string;
   maxF: string;
   owned: boolean;
@@ -59,14 +64,20 @@ export interface AssetDetail {
 
 /** Replica la costruzione di `asV`/`posV` in `renderVals()` per il Dettaglio titolo. */
 export function computeAssetDetail(data: AppData, sym: string): AssetDetail | null {
-  const c = CATALOG_BY_SYM[sym];
+  const catalogBySym = liveCatalogBySym();
+  const c = catalogBySym[sym];
   if (!c) return null;
 
-  const chart = computeChart(c.sym, c.price, c.r1y);
-  const tr = c.type === 'Obbligazioni' ? 0.125 : 0.26;
+  const quote = getCachedQuote(sym);
+  const ready = !!quote;
+  const errored = hasQuoteError(sym);
+  const chart = quote ? computeChartFromSeries(quote.series) : { pts: '', area: '', min: 0, max: 0 };
+  const chartStart = quote?.series[0]?.t;
+  const chartStartF = chartStart ? `${MESI[new Date(chartStart).getMonth()]} ${new Date(chartStart).getFullYear()}` : '';
+  const tr = 0.26;
   const pac = data.pacs.find((p) => p.sym === c.sym);
 
-  const holdings = computeHoldings(data.lots, CATALOG_BY_SYM);
+  const holdings = computeHoldings(data.lots, catalogBySym);
   const h = holdings.find((x) => x.c.sym === c.sym);
 
   let position: AssetPosition | null = null;
@@ -82,7 +93,7 @@ export function computeAssetDetail(data: AppData, sym: string): AssetDetail | nu
       gainF: signedEuro(h.gain),
       taxF: fmt(h.tax),
       netF: fmt(h.net),
-      divLabel: c.type === 'Obbligazioni' ? 'Cedole annue stimate' : 'Dividendi annui stimati',
+      divLabel: 'Dividendi annui stimati',
       divF: fmt(h.div),
       divNetF: fmt(h.divNet),
       lots: h.lots
@@ -104,17 +115,20 @@ export function computeAssetDetail(data: AppData, sym: string): AssetDetail | nu
     name: c.name,
     type: c.type,
     ex: c.ex,
+    ready,
+    errored,
     priceF: fo(c, c.price),
     priceEurF: fmt(c.price / USD_EUR_RATE),
     isUsd: c.cur === 'USD',
     r1yF: pct(c.r1y),
     ytdF: pct(c.ytd),
     color: signColor(c.r1y),
-    yldLabel: c.type === 'Obbligazioni' ? 'Cedola annua' : 'Dividendo annuo',
+    yldLabel: 'Dividendo annuo',
     yldF: c.yld ? c.yld.toFixed(2).replace('.', ',') + '%' : '—',
     trF: (tr * 100).toString().replace('.', ',') + '%',
     chartPts: chart.pts,
     chartArea: chart.area,
+    chartStartF,
     minF: fo(c, chart.min),
     maxF: fo(c, chart.max),
     owned: !!h,

@@ -60,15 +60,25 @@ export interface Pac {
   day: number;
 }
 
-export type SecurityType = 'Azioni' | 'ETF' | 'Crypto' | 'Obbligazioni' | 'Fondi';
+export type SecurityType = 'Azioni' | 'ETF' | 'Crypto';
 export type Currency = 'EUR' | 'USD';
 
-export interface Security {
+/** Da dove recuperare il prezzo reale: Twelve Data (azioni/ETF) o CoinGecko (crypto). */
+export type FeedRef =
+  | { provider: 'td'; symbol: string; mic?: string }
+  | { provider: 'cg'; id: string };
+
+export interface SecurityStatic {
   sym: string;
   name: string;
   type: SecurityType;
   ex: string;
   cur: Currency;
+  feed: FeedRef;
+}
+
+export interface Security extends SecurityStatic {
+  /** Questi quattro campi sono dati di mercato reali, recuperati live e messi in cache; 0 finché non sono ancora arrivati. */
   price: number;
   r1y: number;
   ytd: number;
@@ -90,6 +100,10 @@ export interface AppData {
   extra: boolean;
   /** true dopo la schermata di benvenuto (patrimonio iniziale impostato) */
   onboarded: boolean;
-  /** patrimonio di partenza dichiarato dall'utente, non derivato dai movimenti */
-  initialBalance: number;
+  /** contanti dichiarati in fase di benvenuto: si somma allo spendibile */
+  initialCash: number;
+  /** saldo conto dichiarato in fase di benvenuto: si somma allo spendibile */
+  initialBank: number;
+  /** valore investito già in essere, non legato a titoli specifici: si somma al patrimonio investito */
+  initialInvested: number;
 }

@@ -95,13 +95,13 @@
   font-size: 11px;
   font-weight: 500;
 }
+.search-row-error {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-neutral-600);
+}
 
 .search-empty {
   font-size: 13px;
   color: var(--color-neutral-700);
-}
-.search-footnote {
-  font-size: 11px;
-  color: var(--color-neutral-600);
-  margin: 12px 0 0;
 }

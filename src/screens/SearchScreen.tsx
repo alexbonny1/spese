@@ -1,10 +1,14 @@
 import { ChevronLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { FullScreenOverlay } from '../components/FullScreenOverlay';
+import { CATALOG_STATIC } from '../data/catalog';
 import { fmt } from '../lib/format';
+import { useMarketTick } from '../lib/marketData';
 import { searchSecurities, TYPE_CHIPS, type TypeFilter } from '../lib/search';
 import { useAppState } from '../state/AppStateContext';
 import './SearchScreen.css';
+
+const ALL_SYMS = CATALOG_STATIC.map((c) => c.sym);
 
 interface SearchScreenProps {
   prefill: number | null;
@@ -17,7 +21,8 @@ export function SearchScreen({ prefill, onBack, onOpenAsset }: SearchScreenProps
   const [q, setQ] = useState('');
   const [type, setType] = useState<TypeFilter>('Tutti');
 
-  const results = useMemo(() => searchSecurities(data, q, type), [data, q, type]);
+  const marketTick = useMarketTick(ALL_SYMS);
+  const results = useMemo(() => searchSecurities(data, q, type), [data, q, type, marketTick]);
 
   return (
     <FullScreenOverlay>
@@ -65,15 +70,20 @@ export function SearchScreen({ prefill, onBack, onOpenAsset }: SearchScreenProps
               </span>
             </div>
             <div className="search-row-amounts">
-              <span className="search-row-price">{r.priceF}</span>
-              <span className="search-row-r1y" style={{ color: r.color }}>
-                {r.r1yF} 1 anno
-              </span>
+              {r.errored ? (
+                <span className="search-row-price search-row-error">dati non disponibili</span>
+              ) : (
+                <>
+                  <span className="search-row-price">{r.priceF}</span>
+                  <span className="search-row-r1y" style={{ color: r.ready ? r.color : 'var(--color-neutral-700)' }}>
+                    {r.r1yF} 1 anno
+                  </span>
+                </>
+              )}
             </div>
           </button>
         ))}
         {results.length === 0 && <p className="search-empty">Nessun titolo trovato.</p>}
-        <p className="search-footnote">Prezzi e rendimenti di esempio, non aggiornati.</p>
       </div>
     </FullScreenOverlay>
   );

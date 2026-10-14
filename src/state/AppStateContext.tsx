@@ -9,7 +9,7 @@ interface AppStateValue {
   data: AppData;
   setData: (updater: (prev: AppData) => AppData) => void;
   resetData: () => void;
-  completeOnboarding: (initialBalance: number) => void;
+  completeOnboarding: (v: { cash: number; bank: number; invested: number }) => void;
 }
 
 const AppStateContext = createContext<AppStateValue | null>(null);
@@ -37,8 +37,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const setData = (updater: (prev: AppData) => AppData) => setDataState(updater);
   const resetData = () => setDataState(seed());
-  const completeOnboarding = (initialBalance: number) =>
-    setDataState((prev) => ({ ...prev, onboarded: true, initialBalance }));
+  const completeOnboarding = ({ cash, bank, invested }: { cash: number; bank: number; invested: number }) =>
+    setDataState((prev) => ({ ...prev, onboarded: true, initialCash: cash, initialBank: bank, initialInvested: invested }));
 
   return (
     <AppStateContext.Provider value={{ data, setData, resetData, completeOnboarding }}>

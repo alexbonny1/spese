@@ -16,7 +16,7 @@ export interface Holding {
   value: number;
   gain: number;
   gainPct: number;
-  /** aliquota: 12,5% obbligazioni, 26% il resto */
+  /** aliquota sulle plusvalenze, 26% */
   tr: number;
   tax: number;
   net: number;
@@ -46,7 +46,7 @@ export function computeHoldings(lots: Lot[], catalogBySym: Record<string, Securi
     const cost = toEur(c, h.costO) + h.fee;
     const value = toEur(c, h.qty * c.price);
     const gain = value - cost;
-    const tr = c.type === 'Obbligazioni' ? 0.125 : 0.26;
+    const tr = 0.26;
     const tax = Math.max(0, gain) * tr;
     const div = (value * c.yld) / 100;
     return {

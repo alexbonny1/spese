@@ -2,6 +2,7 @@ import { Search } from 'lucide-react';
 import { useMemo } from 'react';
 import { Blueprint } from '../components/Blueprint';
 import { computeInvestments } from '../lib/investments';
+import { useMarketTick } from '../lib/marketData';
 import { useAppState } from '../state/AppStateContext';
 import './FixedScreen.css';
 import './InvestmentsPanel.css';
@@ -13,7 +14,9 @@ interface InvestmentsPanelProps {
 
 export function InvestmentsPanel({ onSearch, onOpenAsset }: InvestmentsPanelProps) {
   const { data, setData } = useAppState();
-  const v = useMemo(() => computeInvestments(data), [data]);
+  const heldSyms = useMemo(() => [...new Set(data.lots.map((l) => l.sym))], [data.lots]);
+  const marketTick = useMarketTick(heldSyms, { withYield: true });
+  const v = useMemo(() => computeInvestments(data), [data, marketTick]);
 
   const removePac = (id: string) => {
     setData((prev) => ({ ...prev, pacs: prev.pacs.filter((p) => p.id !== id) }));
@@ -34,6 +37,12 @@ export function InvestmentsPanel({ onSearch, onOpenAsset }: InvestmentsPanelProp
             <span>Investito (con commissioni)</span>
             <span>€ {v.pfCostF}</span>
           </div>
+          {v.initialInvestedF && (
+            <div className="inv-summary-row">
+              <span>di cui già investito prima di Saldo</span>
+              <span>€ {v.initialInvestedF}</span>
+            </div>
+          )}
           <div className="inv-summary-row">
             <span>Guadagno/perdita</span>
             <span style={{ color: v.pfGainColor, fontWeight: 500 }}>{v.pfGainF}</span>

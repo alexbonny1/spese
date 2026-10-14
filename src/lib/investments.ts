@@ -1,6 +1,6 @@
-import { CATALOG_BY_SYM } from '../data/catalog';
 import { computeHoldings } from './calc';
 import { fmt, fq, pct, signColor, signedEuro } from './format';
+import { liveCatalogBySym } from './marketData';
 import type { AppData, Security } from './types';
 
 export interface HoldingRow {
@@ -20,6 +20,7 @@ export interface PacRow {
 }
 
 export interface InvestmentsVals {
+  initialInvestedF: string | null;
   pfValueF: string;
   pfCostF: string;
   pfGainF: string;
@@ -38,11 +39,11 @@ function fo(c: Security, v: number): string {
 }
 
 /** Replica la sezione Fisse › Investimenti (riepilogo portafoglio) di `renderVals()`. */
-export function computeInvestments(data: AppData, catalogBySym: Record<string, Security> = CATALOG_BY_SYM): InvestmentsVals {
+export function computeInvestments(data: AppData, catalogBySym: Record<string, Security> = liveCatalogBySym()): InvestmentsVals {
   const holdings = computeHoldings(data.lots, catalogBySym);
   const pf = holdings.reduce(
     (a, h) => ({ value: a.value + h.value, cost: a.cost + h.cost, tax: a.tax + h.tax, divNet: a.divNet + h.divNet }),
-    { value: 0, cost: 0, tax: 0, divNet: 0 },
+    { value: data.initialInvested, cost: data.initialInvested, tax: 0, divNet: 0 },
   );
   const pfGain = pf.value - pf.cost;
 
@@ -68,6 +69,7 @@ export function computeInvestments(data: AppData, catalogBySym: Record<string, S
   });
 
   return {
+    initialInvestedF: data.initialInvested > 0 ? fmt(data.initialInvested) : null,
     pfValueF: fmt(pf.value),
     pfCostF: fmt(pf.cost),
     pfGainF: signedEuro(pfGain),

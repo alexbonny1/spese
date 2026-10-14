@@ -59,6 +59,8 @@ export function seed(): AppData {
     perDay: true,
     extra: true,
     onboarded: true,
-    initialBalance: 0,
+    initialCash: 0,
+    initialBank: 0,
+    initialInvested: 0,
   };
 }

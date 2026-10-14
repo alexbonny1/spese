@@ -14,6 +14,8 @@ export function emptyData(): AppData {
     perDay: true,
     extra: true,
     onboarded: false,
-    initialBalance: 0,
+    initialCash: 0,
+    initialBank: 0,
+    initialInvested: 0,
   };
 }

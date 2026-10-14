@@ -31,18 +31,19 @@
 }
 
 .onboarding-field {
+  margin-top: 14px;
+}
+
+.onboarding-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   margin-top: 18px;
-}
-
-.onboarding-input {
+  padding-top: 12px;
+  border-top: 1px dashed var(--color-neutral-500);
   font-family: var(--font-heading);
-  font-size: 22px;
-  height: 52px;
-}
-
-.onboarding-preview {
-  font-size: 12px;
-  color: var(--color-neutral-700);
+  font-weight: 600;
+  font-size: 17px;
 }
 
 .onboarding-footer {
